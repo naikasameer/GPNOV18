@@ -1,0 +1,94 @@
+/* Move down content because we have a fixed navbar that is 3.5rem tall */
+body {
+  padding-top: 3.5rem;
+}
+
+.jumbotron {
+  margin-top: 20px;
+background-image: url(images/digital-transformation-hero.jpg);
+ background-size: cover;
+
+
+}
+
+h2 {
+  text-align: center;
+  color: #222;
+  padding-bottom: 0.5in;
+}
+
+.digitalStrat {
+  text-align: left;
+
+}
+
+.digital {
+  float: right;
+}
+
+/*Social banner hovers and information */
+
+.socialBanner {
+  background-color: lightblue;
+  
+}
+
+.socialBanner:hover {
+  background-color: darkblue;
+
+}
+
+
+
+
+
+
+/*Display 3 and jumbop are the white text on the jumbotron */
+
+.display-3 {
+  color: white;
+}
+.jumbop {
+  color: white;
+  
+}
+
+p{
+  color:#222;
+}
+
+.row {
+  text-align: center;
+}
+
+h5 {
+  color: darkcyan;
+}
+
+
+
+.howwedoitImage {
+  float: left;
+  padding-right: 0.5in;
+}
+
+
+
+
+
+
+/*Feature divider css*/
+
+.featurette-divider {
+  margin: 5rem 0; /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+.featurette-heading {
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -.05rem;
+  color: darkcyan;
+
+}
+
