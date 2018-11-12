@@ -1,0 +1,43 @@
+/* Move down content because we have a fixed navbar that is 3.5rem tall */
+body {
+  padding-top: 3.5rem;
+}
+
+.jumbotron{
+  background-image: url("/images/digital-transformation-hero.jpg");
+  color: white;
+  background-size: cover;
+  background-position-y: 4vh;
+  background-repeat: no-repeat;
+}
+
+.jumbotron .container{
+  background: rgba(17, 157, 166, 0.8);
+  border-radius: 30px;
+  margin: 0;
+  -webkit-transform: rotate(-30deg);
+  transform: rotate(-30deg);
+}
+
+.jumbotron .container h1{
+  -webkit-transform: rotate(30deg);
+  transform: rotate(30deg);
+}
+
+.jumbotron .container p{
+  -webkit-transform: rotate(30deg);
+  transform: rotate(30deg);
+}
+
+.navbar-light .navbar-nav .nav-link{
+  color: black;
+}
+
+.navbar-expand-md .navbar-collapse{
+  height: 5vh;
+}
+
+
+
+
+
