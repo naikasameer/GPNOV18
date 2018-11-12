@@ -1,0 +1,103 @@
+<html>
+
+    <head>
+        <title>Employee Information Form</title>
+        <link rel="stylesheet" type="text/css" href="css/styles.css">
+    </head>
+
+    <body>
+
+        <h1>Information Form</h1>
+
+        <form id="info-form" method="GET" action="myinfo.svc">
+            <table cellpadding="5">
+                <tr>
+                    <td><b>Employee Number:</b></td>
+                    <td><input name="empno" size="10" maxlength="5" placeholder="Enter Empno"></td><!--default type="text-->
+                </tr>
+                <tr>
+                    <td><b>Employee PIN:</b></td>
+                    <td><input name="pin" type="password" size="10" placeholder="Enter OTP"></td>
+                </tr>
+                <tr>
+                    <td><b>Brief Introduction:</b></td>
+                    <td><textarea rows="3" cols="25">Enter your Info</textarea></td>
+                </tr>
+                <tr>
+                    <td><b>Gender:<b></td>
+                    <td><input type="radio" name="gender" value="M"> Male </textarea>
+                    <input type="radio" name="gender" value="F"> Female </textarea>
+                    <input type="radio" name="gender" value="O"></textarea> Other </td>
+                </tr>
+                <tr>
+                    <td><b>Interests:</b></td>
+                    <td>
+                        <input type="checkbox" name="interests" value="BI"> Business Intelligence </br>
+                        <input type="checkbox" name="interests" value="AD"> Application Development </br>
+                        <input type="checkbox" name="interests" value="AT"> Assurance and Testing </br>
+                        <input type="checkbox" name="interests" value="AS"> Application Support </br>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Location:</b></td>
+                    <td>
+                        <select name="location">
+                            <option value="NA">Select Your Location</option>
+                            <option value="LS">Leeds</option>
+                            <option value="RD">Reading</option>
+                            <option value="MHP">Mahape</option>
+                            <option value="SPZ">Seepz</option>
+                            <option value="PNQ">Pune</option>
+                            <option value="DS">Dallas</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                        <td><b>Skills:</b></td>
+                        <td>
+                            <select name="Skills" size="4" multiple="yes">
+                                <option value="JV">Java</option>
+                                <option value="DN">.Net</option>
+                                <option value="SQL">SQL</option>
+                                <option value="PY">Python</option>
+                                <option value="RB">Ruby</option>
+                            </select>
+                        </td>
+                </tr>
+                <tr>
+                    <td><b>Years of Experience:</b></td>
+                    <td>0<input type="range" name="exp" min="0" max="60">60</td>
+                </tr>
+                <tr>
+                    <td><b>Contact Number:</b></td>
+                    <td>
+                        <input type="number" name="mobile">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Joining Date:</b></td>
+                    <td><input type="date" name="joinDate"></td>
+                </tr>
+                <tr>
+                    <td><b>Contact Email</b></td>
+                    <td><input type="email" name="email"></td>
+                </tr>
+                <tr>
+                    <td><b>Upload Picture</b></td>
+                    <td><input type="file" name="picture"></td>
+                </tr>
+                <tr>
+                    <td><b>Select Favourite Colour:</b></td>
+                    <td><input type="color" name="favcolor"></td>
+                </tr>
+                <tr>
+                    <td><b><input type="submit" value="Submit"></b></td>
+                    <td><input type="reset" value="Reset Info"></td>
+                </tr>
+
+            </table>
+        </form>
+
+    </body>
+
+</html>
