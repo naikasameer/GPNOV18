@@ -1,0 +1,96 @@
+<html>
+    <head>
+<title>Myinfo</title>
+    </head>
+    <body bgcolor = "pink">
+        <h2 align ="center" >My Information Form</h2>
+<form id="info-form" method="GET" action="myinfo.svc">
+    <table>
+<tr>
+    <td>Employee Number:</td>
+    <td><input name ="empno" size="12" maxlength="6" placeholder="Insert Employee Number"</td>
+</tr>
+<tr>
+        <td>Employee PIN:</td>
+        <td><input name ="emppin" type ="password" size="12" maxlength="4" placeholder="Insert PIN"</td>
+    </tr>
+    <tr>
+            <td>About Yourself</td>
+            <td><textarea rows="5" cols="20" placeholder="enter your info"></textarea> </td>
+        </tr>
+        <tr>
+                <td>Gender</td>
+                <td><input type="radio" name ="gender" value="M">Male
+                <input type="radio" name ="gender" value="F">Female</td>
+            </tr>
+
+            <tr>
+                    <td>Interests</td>
+                    <td><input type="checkbox" name ="Interests" value="BI">Business Intelligence
+                    <input type="checkbox" name ="Interests" value="AR">Assurance and Testing
+                    <input type="checkbox" name ="Interests" value="AS">App Support
+                    <input type="checkbox" name ="interests" value="AD">App Development</td>
+                </tr>
+
+            <tr>
+                <td>Location</td>
+                <td>
+                    <select name="location">
+                        <option value ="NA">Select a Location</option>
+                        <option value ="LS">Leeds</option>
+                        <option value ="RD">Reading</option>
+                        <option value ="MHP">Mahape</option>
+                        <option value ="SPZ">Seepz</option>
+                        <option value ="PNQ">Seepz</option>
+                        <option value ="BFD">Bradford</option>
+
+
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Skills</td>
+                    <td>
+                        <select name="Skills" size="8" multiple="y">
+                            <option value ="J">Java</option>
+                            <option value ="DN">.NET</option>
+                            <option value ="SQL">SQL</option>
+                            <option value ="PY">Python</option>
+                            <option value ="RB">Ruby</option>
+                            <option value ="GRB">I suck</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                        <td>Experience:</td>
+                        <td>0<input type="range" name ="exp" min="0" max="40" value="3">40
+                    </tr>
+                <tr>
+                        <td>Contact Num:</td>
+                        <td><input type="number" name ="Number" placeholder="Mobile Num">
+                    </tr>
+                    <tr>
+                        <td>Joining date</td>
+                        <td><input type ="date" name ="joindate"></td>
+                    </tr>
+                    <tr>
+                            <td>Email</td>
+                            <td><input type ="email" name ="email" placeholder="Enter email address"></td>
+                        </tr>
+                        <tr>
+                                <td>Upload picture</td>
+                                <td><input type ="File" name ="picture"></td>
+                            </tr>
+                            <tr>
+                                    <td>Favourite colour</td>
+                                    <td><input type ="color" name ="favcolor"></td>
+                                </tr>
+
+                                <tr>
+                                        <td align="right" colspan="2"><input type ="submit" value ="Save Info"</td>
+                                        <td><input type ="reset" name ="Clear Form"></td>
+                                    </tr>
+    </table>
+</form>
+    </body>
+</html>
