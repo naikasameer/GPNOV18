@@ -1,0 +1,21 @@
+﻿Setting up HTML Web enviorment
+a. Identify and open the root directory in an IDE[Visual Studio Code]
+b. Created the relevant html documents for displaying the content in HTML
+c. Configured the server
+	Using Node Package Manager to manage installations formultiple dev env packages (npm) (node.js cmd)
+	Npm install <options> <package-name>
+	Install live-sever : npm install – g live-server
+d. Tested the web page using the browser
+	http://127.0.0.1:8080/<filename>.html
+e. Continue to develop or make changes in the pages and test it on the browser
+
+Tags in HTML
+a. Core Tags: <html>, <head>, <title>, <body>
+b. Formatting tags: <hx>: <h1 - h6> <p> 
+
+node.js cmd:
+	1 d:
+	2 cd to the correct folder
+	3 dir
+	4 live-server
+	5 done

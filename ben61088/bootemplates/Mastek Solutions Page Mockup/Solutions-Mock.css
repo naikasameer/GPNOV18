@@ -1,0 +1,40 @@
+/* Container holding the image and the text */
+.container {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+/* Top left text */
+.top-left {
+    position: absolute;
+    top: 50px;
+    left: 60px;
+    width:100px
+}
+
+/* Middle left text */
+.middle-left {
+    position: absolute;
+    top: 50px;
+    left: 60px;
+    width:100px
+}
+
+/* Bottom left text */
+.bottom-left {
+    position: absolute;
+    bottom: 50px;
+    left: 60px;
+    text-align: left;
+    width:3in;
+}
+
+/*Image Rotation Class*/
+.rotateimg {
+    -webkit-transform:rotate(-18deg);
+    -moz-transform: rotate(-18deg);
+    -ms-transform: rotate(-18deg);
+    -o-transform: rotate(-18deg);
+    transform: rotate(-18deg);
+  }

@@ -1,0 +1,356 @@
+body{
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.header-container{
+    display:flex;
+    height:15vh;
+    background-color:white;
+    flex-direction : row;
+    align-items: center;
+    justify-content: space-around;
+    position: fixed; /*fixed means that the header will stay at the top of the browser window as the rest of the page scrolls*/
+    width: 100%;
+}
+
+.branding{
+    height:13vh;
+    width:10vw;
+    
+}
+.branding img{
+    height:8vh;
+    width:14vw;
+    padding-top: 2vh;
+
+    
+}
+
+.nav-bar ul{
+    list-style-type: none;
+    align-self: center;
+}
+.nav-bar ul li{
+    display: inline;
+    padding:1em;
+}
+.nav-bar ul li a{
+    text-decoration: none;
+    color: black;
+    text-transform: uppercase;
+}
+.nav-bar ul li a:hover{
+    color:turquoise;
+    border-bottom:2px solid turquoise;
+    padding-bottom: 1em;
+}
+
+.button{
+    background: teal;
+    color:#fff;
+    padding:1em;
+    font-size:1em;
+    border-radius:100px; /*Rounds corners*/
+    width:10vw;
+    border:2px solid #fff;
+    text-transform: uppercase
+}
+.button:hover{
+    background: midnightblue;
+    color: blue;
+}
+
+/* Hero unit css */
+
+.hero-unit-container{
+    background: url('../images/cs-hero.jpg') no-repeat;
+    height:55vh;
+    text-align: center;
+    background-position: bottom;
+    
+}
+.hero-unit-mask{ /*transparent mask over the picture in the container above*/
+    background-color: rgba(255, 255, 255, 0.712);
+    height:20vh;
+  
+}
+.hero-unit-mask h4{
+    padding-top:30vh;
+    margin:0;
+    font-size: 40pt;
+    font-style: normal;
+    color:midnightblue;
+    text-align: left;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-stretch: narrower;
+    font-weight: lighter;
+    text-indent: 1in;
+}
+.hero-unit-mask p{
+    margin:0;
+    font-size: 16pt;
+    font-style: normal;
+    color:black;
+    text-align: left;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-stretch: narrower;
+    font-weight: lighter;
+    text-indent: 1in;  
+}
+.filters{
+    height:25vh;
+    background-color: rgb(236, 236, 236);
+    width: 86% ;
+    display: flex;
+    flex-direction: row;
+    margin-inline-start:7%;
+    margin-inline-end: 7%;
+}
+.filters h1{
+    font-size: 12pt;
+    text-transform: uppercase;
+    padding-top: 0.1in;
+    color: #444
+}
+.filtersbutt{
+    margin-inline-start: 0.3in;
+    margin-inline-end: 0.3in;
+    padding-top: 0.1in;
+}
+.filters button{
+    background: rgb(95, 152, 160);
+    color:#fff;
+    border: rgb(95, 152, 160);
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius:20px; /*Rounds corners*/
+    width:fit-content;
+    font-size: 10pt;
+    font-weight: bolder;
+    display: inline-flex;
+}
+.filters button:hover{
+    background: midnightblue;
+    color: #fff;
+}
+
+.paper-flex-container{
+    display: flex;
+    flex-direction: column;   
+    background-color: white;  
+    width: 86%;
+    margin-inline-start:7%;
+    margin-inline-end: 7%; 
+}
+
+.paper-flex-container h1{
+    font-size : 1.5em;
+    color: palevioletred;
+}
+.paper-flex-row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    
+}
+
+.paper{
+    height:370px;
+    width:370px;
+    background-color: rgb(240, 240, 240);
+    text-align: left;
+    margin: 20px;
+    border-bottom-width: 5px;
+    border-bottom-color: rgb(95, 141, 160);
+    border-bottom-style: solid;    
+}
+.paper:hover{
+    height:370px;
+    width:370px;
+    background-color: rgb(95, 141, 160);
+    text-align: left;
+    margin: 20px;
+    border-bottom-width: 5px;
+    border-bottom-color: rgb(95, 141, 160);
+    border-bottom-style: solid;
+}
+.paper h2{
+    font-size:22pt;
+    color:rgb(92, 92, 92);
+    font-weight: lighter;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-stretch: narrower;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.paper:hover h2{
+    font-size:22pt;
+    color:#fff;
+    font-weight: lighter;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-stretch: narrower;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.paper img{
+    height:200px;
+    width:350px;
+}
+
+.paper p{
+    font-size: 0.8em;
+    color:#444;
+    padding:1em;
+}
+
+/* footer css */
+footer{
+    height: 10vh;
+    background-color: cadetblue;
+    border-top:2px solid coral;
+    text-align: center;
+    padding-top:2em;
+    color:cyan;
+}
+
+/* Media Queries */
+
+/* Extra Small Devices */
+@media(max-width:575px){
+    .header-container{
+        height:15vh;
+    }
+    .branding{
+        height: 10vh;
+        width:20vw;
+    }
+    .branding img{
+        height: 10vh;
+        width:20vw;
+    }
+    .nav-bar ul{
+        margin:0;
+        padding:0;
+    }
+
+    .nav-bar ul li{
+        display: block;
+        padding:0 0 0.5em 0;
+    }
+
+    .nav-bar ul li a{
+        font-size: 0.8em;
+    }
+    .nav-bar ul li a:hover{
+        padding-bottom:0.5em;
+    }
+
+    button{
+        width:20vw;
+    }
+
+    .hero-unit-container{
+        height:60vh;
+    }
+    .hero-unit-mask{
+        height: 60vh;
+    }
+    .hero-unit-mask h1{
+        padding-top:25vh;
+    }
+    .hero-unit-mask a{
+        width:15vw;
+    }
+
+    .paper-flex-row{
+        flex-direction: column;
+    }
+}
+
+/* Small Devices */
+@media(min-width:576px) and (max-width:767px){
+    .header-container{
+        height: 15vh;
+    }
+    .branding{
+        height:10vh;
+        width:20vw;
+    }
+    .branding img{
+        height:10vh;
+        width:20vw;
+    }
+
+    .nav-bar ul{
+        margin:0;
+        padding:0;
+    }
+
+    .nav-bar ul li{
+        display: block;
+        padding:0 0 0.5em 0;
+    }
+
+    .nav-bar ul li a{
+        font-size: 0.8em;
+    }
+    .nav-bar ul li a:hover{
+        padding-bottom:0.5em;
+    }
+
+    button{
+        width:20vw;
+    }
+
+    .hero-unit-container{
+        height:60vh;
+    }
+    .hero-unit-mask{
+        height: 60vh;
+    }
+    .hero-unit-mask h1{
+        padding-top:30vh;
+    }
+    .hero-unit-mask a{
+        width:15vw;
+    }
+
+    .paper-flex-row{
+        flex-direction: column;
+    }
+}
+
+/* Medium Devices */
+@media(min-width:768px) and (max-width:920px){
+    .header-container{
+        height:15vh;
+    }
+    .branding{
+        height:10vh;
+        width:20vw;
+    }
+    .branding img{
+        height:10vh;
+        width:20vw;
+    }
+    button{
+        width:18vw;
+    }
+    .hero-unit-container{
+        height: 60vh;
+    }
+    .hero-unit-mask{
+        height: 60vh;
+    }
+    .hero-unit-mask h1{
+        color:#fff;
+        font-size:3.5em;
+        padding-top:30vh;
+    }
+    .hero-unit-mask a{
+        width:18vw;
+    }
+}

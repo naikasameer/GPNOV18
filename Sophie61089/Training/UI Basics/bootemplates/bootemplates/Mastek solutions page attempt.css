@@ -1,0 +1,63 @@
+/* Move down content because we have a fixed navbar that is 3.5rem tall */
+body {
+  padding-top: 3.5rem;
+}
+.navbar {
+    background-color: white;
+}
+.navbar .navbar-nav .nav-link {
+    color: black;
+    text-transform: uppercase;
+}
+.navbar .navbar-nav .active .nav-link{
+    color: blue;
+    text-transform: uppercase;
+}
+.navbar .navbar-nav .nav-link:hover{
+    color: blue;
+    background-color: rgb(190, 190, 190);
+    text-transform: uppercase;
+}
+#navbarsExampleDefault {
+    text-align: center;
+}
+.jumbotron {
+    background-image: url(digital-transformation-hero.jpg)
+}
+
+.jumbotron h1{
+    color: white;
+    background-color: rgba(60, 162, 245, 0.644);
+}
+.jumbotron p{
+    color: white;
+    background-color: rgba(60, 162, 245, 0.644);
+}
+#mainhead {
+    text-align: center;
+    padding-bottom: 20px;
+    color: blue;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 28pt;
+    font-stretch: narrower;
+    font-weight: lighter;
+}
+.container img{
+    height: 230px;
+}
+.container h2{
+    color: rgb(74, 74, 207);
+    padding-top: 50px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20pt;
+    font-stretch: narrower;
+    font-weight: lighter;
+}
+.container h4{
+    color: rgb(0, 0, 95);
+    padding-top: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18pt;
+    font-stretch: narrower;
+    font-weight: lighter;
+}

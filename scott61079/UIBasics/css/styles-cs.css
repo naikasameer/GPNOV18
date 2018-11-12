@@ -1,0 +1,311 @@
+body{
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.header-container{
+    display:flex;
+    height:13vh;
+    flex-direction : row;
+    align-items: center;
+    justify-content: space-around;
+    position: relative;
+    width: 100%;
+}
+/*#transparent{
+    height:10vh;
+    background-color:rgb(19, 18, 18);
+    opacity: 0.7;*/
+    
+}
+.branding{
+    height:10vh;
+    width:20vw;
+}
+.branding img{
+    height:10vh;
+    width:15vw;
+    
+}
+
+.nav-bar ul{
+    list-style-type: none;
+}
+.nav-bar ul li{
+    display: inline;
+    padding:1em;
+}
+.nav-bar ul li a{
+    text-decoration: none;
+    color:rgb(0, 0, 0);
+}
+.nav-bar ul li a:hover{
+    color:turquoise;
+    padding-bottom: 10px;
+}
+
+button{
+    background-color:rgb(41, 128, 243);
+    color:#fff;
+    padding:1em;
+    font-size:10px;
+    border-radius:60px;
+    width:10vw;
+    border:2px solid #fff;
+}
+button:hover{
+    background: #fff;
+    color:blue;
+}
+
+/* Hero unit css */
+
+.hero-unit-container{
+    background: url('../Images/Case-studies-hero.jpg') no-repeat;
+    height:40vh;
+    text-align: left;
+    font-size: 30px;
+    color:rgb(85, 9, 226);
+    padding-left: 1.5in;
+    padding-top: 1in;
+    font-weight: lighter;
+    font-stretch: narrower;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+    /*background-position: bottom;*/
+    
+}
+
+#button{
+    text-align: center;
+}
+
+#para{
+    color: black;
+    font-size: 22px;
+    padding-bottom:0.5in;
+    font-weight:lighter;
+}
+
+/*.hero-unit-mask{
+    height:20vh;
+    background-color: rgba(253, 251, 253, 0.603);*/
+  
+}
+.hero-unit-mask h1{
+    padding-top:0vh;
+    margin:0;
+    font-size: 1.5em;
+    color:blue;
+    font-weight: lighter;
+}
+.hero-unit-mask a{
+    text-decoration: none;
+    color:#fff;
+    background-color:rgb(234, 61, 240);
+    padding:1em;
+    display: block;
+    width:8vw;
+    margin:1em auto;
+    border-radius:5px;
+}
+.hero-unit-mask a:hover{
+    background-color: #fff;
+    color:blue;
+}
+
+.paper-flex-container{
+    display: flex;
+    flex-direction: column;   
+    background-color: #ddd;    
+}
+
+.paper-flex-container h1{
+    font-size : 1em;
+    /*margin:1em auto;*/
+    color:black;
+    box-align:left;
+    padding-left: 2in;
+}
+.paper-flex-row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-top:50px;
+    padding-left: 70px;
+    padding-right: 70px;
+    
+}
+
+.paper{
+    height:40%;
+    width:100%;
+    background-color: white;
+    text-align: center;
+    
+    /*box-shadow: 0 0 20px grey;
+    padding:1em;
+    margin:1em;*/
+}
+.paper h2{
+    font-size:1em;
+    
+}
+.paper img{
+    height:60%;
+    width:100%;
+}
+
+.paper p{
+    font-size: 0.8em;
+    color:#444;
+    padding:1em;
+}
+
+/* footer css */
+footer{
+    height: 10vh;
+    background-color: cadetblue;
+    border-top:2px solid rgb(80, 249, 255);
+    text-align: center;
+    padding-top:2em;
+    color:#fff;
+}
+
+/* Media Queries */
+
+/* Extra Small Devices */
+@media(max-width:575px){
+    .header-container{
+        height:15vh;
+    }
+    .branding{
+        height: 10vh;
+        width:20vw;
+    }
+    .branding img{
+        height: 10vh;
+        width:20vw;
+    }
+    .nav-bar ul{
+        margin:0;
+        padding:0;
+    }
+
+    .nav-bar ul li{
+        display: block;
+        padding:0 0 0.5em 0;
+    }
+
+    .nav-bar ul li a{
+        font-size: 0.8em;
+    }
+    .nav-bar ul li a:hover{
+        padding-bottom:0.5em;
+    }
+
+    button{
+        width:20vw;
+    }
+
+    .hero-unit-container{
+        height:60vh;
+    }
+    .hero-unit-mask{
+        height: 60vh;
+    }
+    .hero-unit-mask h1{
+        padding-top:25vh;
+    }
+    .hero-unit-mask a{
+        width:15vw;
+    }
+
+    .paper-flex-row{
+        flex-direction: column;
+    }
+}
+
+/* Small Devices */
+@media(min-width:576px) and (max-width:767px){
+    .header-container{
+        height: 15vh;
+    }
+    .branding{
+        height:10vh;
+        width:20vw;
+    }
+    .branding img{
+        height:10vh;
+        width:20vw;
+    }
+
+    .nav-bar ul{
+        margin:0;
+        padding:0;
+    }
+
+    .nav-bar ul li{
+        display: block;
+        padding:0 0 0.5em 0;
+    }
+
+    .nav-bar ul li a{
+        font-size: 0.8em;
+    }
+    .nav-bar ul li a:hover{
+        padding-bottom:0.5em;
+    }
+
+    button{
+        width:20vw;
+    }
+
+    .hero-unit-container{
+        height:60vh;
+    }
+    .hero-unit-mask{
+        height: 60vh;
+    }
+    .hero-unit-mask h1{
+        padding-top:30vh;
+    }
+    .hero-unit-mask a{
+        width:15vw;
+    }
+
+    .paper-flex-row{
+        flex-direction: column;
+    }
+}
+
+/* Medium Devices */
+@media(min-width:768px) and (max-width:920px){
+    .header-container{
+        height:15vh;
+    }
+    .branding{
+        height:10vh;
+        width:20vw;
+    }
+    .branding img{
+        height:10vh;
+        width:20vw;
+    }
+    button{
+        width:18vw;
+    }
+    .hero-unit-container{
+        height: 60vh;
+    }
+    .hero-unit-mask{
+        height: 60vh;
+    }
+    .hero-unit-mask h1{
+        color:#fff;
+        font-size:3.5em;
+        padding-top:30vh;
+    }
+    .hero-unit-mask a{
+        width:18vw;
+    }
+}
