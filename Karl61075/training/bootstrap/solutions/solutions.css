@@ -1,0 +1,52 @@
+
+.bg-success {
+  background-color: #0099a8 !important;
+}
+
+.bg-success:hover, .btn-info:hover {
+  background-color:  #001689 !important;
+}
+
+#jumbo {
+  background: url('https://www.mastek.com/sites/default/files/images/Digital%20transformation/digital-transformation-hero.jpg') no-repeat center center;
+}
+
+#banner div.col-md-4 {
+  padding-bottom: 32px;
+}
+
+#banner .col-md-8 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: lighter;
+}
+nav {
+  z-index: 99;
+}
+
+#tilted-bg {
+  position: absolute;
+  top: 0;
+  left: -7%;
+  height: 31.25rem;
+  width: 31.25rem;
+  -webkit-border-radius: 6.25rem;
+  border-radius: 6.25rem;
+  -webkit-transform: rotateZ(70deg);
+  -ms-transform: rotate(70deg);
+  transform: rotateZ(70deg);
+  background-color: rgba(0,153,168,.9);
+  position: absolute;
+  top: 50px;
+  left: -3%;
+  overflow-y: hidden;
+}
+
+#tilted-container {
+  overflow-y: hidden;
+}
