@@ -1,0 +1,29 @@
+/* Move down content because we have a fixed navbar that is 3.5rem tall */
+body {
+    padding-top: 3.5rem;
+  }
+
+  body nav{
+    color: aqua
+}
+
+.jumbotron{
+    background-image: url(./digital-transformation-hero.jpg);
+    background-repeat: no-repeat;
+    background-position-x: center;
+    height: 60vh;
+    color: white
+    
+
+}
+.jumbotron h1{
+    padding-left: 2in;
+}
+
+.jumbotron p{
+    padding-left: 2in;
+}
+.col-md-4 > img{
+    height: 25%;
+    background-position-x: center
+}
