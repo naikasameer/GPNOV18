@@ -1,0 +1,23 @@
+/* Move down content because we have a fixed navbar that is 3.5rem tall */
+body {
+  padding-top: 3.5rem;
+}
+
+.navbar{
+  padding-bottom: 50px;
+}
+
+.jumbotron{
+  background-image: url(../../images/digital-transformation-hero.jpg);
+  background-position-y: 1.55cm;
+  height: 6.5in;
+  background-size: cover;
+  color:white;
+
+}
+
+.jumbotron p h2{
+  margin-top:40px;
+  
+}
+

@@ -1,0 +1,155 @@
+<html>
+
+<head>
+    <title>Information Form</title>
+</head>
+
+<body>
+
+    <h1 align="center">My Information Form</h1>
+
+    <form id="info-form" method="GET" action="myinfo.svc">
+        <table border="1" align="center">
+            <tr>
+                <td>Employee ID:</td>
+                <td>
+                    <input name="empno" size="10" maxlength="6" placeholder="Enter ID"> </td>
+                <!--default input type="text"-->
+            </tr>
+
+            <tr>
+                <td>Employee PIN:</td>
+                <td>
+                    <input name="pin" type="password" size="10" maxlength="4" placeholder="Enter PIN"> </td>
+                <!--default input type="text"-->
+            </tr>
+
+            <tr>
+                <td>Brief Introduction</td>
+                <td>
+                    <textarea rows="3" cols="15" placeholder="Tell us about yourself..."></textarea>
+                </td>
+            </tr>
+            <tr>
+
+                <td>Gender:</td>
+                <td>
+                    <input type="radio" name="gender" value="M">Male
+                    <br>
+                    <input type="radio" name="gender" value="F">Female </td>
+            </tr>
+
+            <tr>
+
+                <td>Interests:</td>
+
+                <td>
+                    <input type="checkbox" name="interests" value="BI">Business Intelligence
+                    <br>
+                    <input type="checkbox" name="interests" value="AD">Application Development
+                    <br>
+                    <input type="checkbox" name="interests" value="AT">Assurance and Testing
+                    <br>
+                    <input type="checkbox" name="interests" value="AS">Application Support
+                    <br>
+
+                </td>
+            </tr>
+            <tr>
+                <td>Location</td>
+                <td>
+                    <select name="location">
+                        <option value="NA">Select your location</option>
+                        <option value="LS">Leeds (LS)</option>
+                        <option value="RD">Reading (RD)</option>
+                        <option value="MHP">Mahape (MHP)</option>
+                        <option value="SPZ">Seepz (SPZ)</option>
+                        <option value="PNQ">Pune (PNQ)</option>
+
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Skills</td>
+                <td>
+                    <select name="skills" size="4" multiple="yes">
+                        <option value="J">Java</option>
+                        <option value="PY">Python</option>
+                        <option value="NET">.Net</option>
+                        <option value="JS">JavaScript</option>
+                        <option value="SQL">SQL</option>
+                        <option value="ANG">Angular</option>
+
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Contact Number:</td>
+
+                <td>
+                    <input type="number" name="mobile" maxlength="11" placeholder="Enter your number">
+                </td>
+            </tr>
+            <tr>
+                <td>Years of Experience:</td>
+
+                <td>
+                    <input type="range" name="YofExp" min="0" max="65" value="2"> 65
+                </td>
+            </tr>
+
+            <tr>
+
+                <td>Joining Date:</td>
+
+                <td>
+                    <input type="date" name="date">
+                </td>
+            </tr>
+
+            <tr>
+                <td>Email:</td>
+
+                <td>
+                    <input type="email" name="date" placeholder="Enter your email">
+
+                </td>
+            </tr>
+            <tr>
+                <td>Upload Picture:</td>
+
+                <td>
+                    <input type="file" name="picture">
+
+                </td>
+            </tr>
+            <tr>
+                <td>Select Favorite Colour:</td>
+
+                <td>
+                    <input type="color" name="favcolor" placeholder="Select your Favorite Colour">
+
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <input type="reset" value="Reset Info">
+                </td>
+                <td align="center">
+                    <input type="submit" value="Save Info"> </td>
+
+            </tr>
+
+        </table>
+
+    </form>
+
+
+
+</body>
+
+
+</html>
