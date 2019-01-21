@@ -18,7 +18,6 @@ public class EnterpriseAppApplication {
 	}
 	
 	
-	
 	public static void method61076(String main) {
 		System.out.println("Method wirrten by 61076");
 		
