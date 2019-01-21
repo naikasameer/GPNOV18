@@ -17,5 +17,10 @@ public class Entity61089 {
 	public void setName(String name) {
 		this.name = name;
 	}
+	@Override
+	public String toString() {
+		return "Entity61089 [id=" + id + ", name=" + name + "]";
+	}
+	
 
 }
