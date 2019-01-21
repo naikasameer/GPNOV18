@@ -9,6 +9,7 @@ public class EnterpriseAppApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(EnterpriseAppApplication.class, args);
 		System.out.println("Welcome to Enterprise App");
+		System.out.println("This app is shared using GIT");
 	}
 }
 
