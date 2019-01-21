@@ -21,8 +21,6 @@ public class EnterpriseAppApplication {
 		System.out.println("Method written by 61082");
 	}
 	
-	
-
 	public static void method61089(String main) {
 		System.out.println("Method returned by 61089");
 	}
