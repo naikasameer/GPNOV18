@@ -20,18 +20,14 @@ public class EnterpriseAppApplication {
 	
 	public static void method61076(String main) {
 		System.out.println("Method wirrten by 61076");
-		
 	}
 
-<<<<<<< HEAD
-	
 public static void method61073(String main) {
 	System.out.println("Method written by Mike - 61073");
 }
 
 	public static void method61072(String main) {
 		System.out.println("Method written by bigboi61072"); 
-		
 	}
 
 	public static void method61082(String main) {
@@ -58,8 +54,6 @@ public static void method61073(String main) {
 		System.out.println("Method written by 61086");
 	}
 	
-	
-
 	public static void method61077(String main) {
 		System.out.println("Method returned by 61077");
 		
