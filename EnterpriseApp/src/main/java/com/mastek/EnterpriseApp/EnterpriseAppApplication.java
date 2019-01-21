@@ -16,5 +16,9 @@ public class EnterpriseAppApplication {
 		System.out.println(message);
 		
 	}
+
+public static void method61073(String main) {
+	System.out.println("Method written by Mike - 61073");
 }
 
+}
