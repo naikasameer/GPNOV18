@@ -16,5 +16,11 @@ public class EnterpriseAppApplication {
 		System.out.println(message);
 		
 	}
+	
+	public static void method61089(String main) {
+		System.out.println("Method returned by 61089");
+	}
+	
+	
 }
 
