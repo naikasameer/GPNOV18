@@ -16,5 +16,11 @@ public class EnterpriseAppApplication {
 		System.out.println(message);
 		
 	}
+	
+	public static void method11988(String main) {
+		System.out.println("Method written by 11988");
+	}
+	
+	
 }
 
