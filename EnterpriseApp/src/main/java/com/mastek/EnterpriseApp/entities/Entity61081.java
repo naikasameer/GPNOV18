@@ -18,7 +18,7 @@ public class Entity61081 {
 	}
 	
 	public void setName(String name) {
-		this.name = name;
+		this.name = name; 
 	}
 	
 	
