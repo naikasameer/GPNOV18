@@ -18,12 +18,22 @@ public class EnterpriseAppApplication {
 	}
 	
 
+
 	public static void method61086(String main) {
 		System.out.println("Method written by 61086");
 	}
 	
 	
 
+
+	public static void method61077(String main) {
+		System.out.println("Method returned by 61077");
+		
+	}
+	public static void method61089(String main) {
+		System.out.println("Method returned by 61089");
+
+	}
 	public static void method11988(String main) {
 		System.out.println("Method written by 11988");
 	}
