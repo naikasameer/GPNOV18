@@ -17,5 +17,4 @@ public class Entity61086 {
 		this.name = name;
 	}
 	
-
 }
