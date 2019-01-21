@@ -65,9 +65,4 @@ public class EnterpriseAppApplication {
 		System.out.println("Method written by 11988");
 	}
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> branch 'master' of https://github.com/naikasameer/GPNOV18.git
 }
