@@ -23,17 +23,12 @@ public class EnterpriseAppApplication {
 		
 	}
 
-<<<<<<< HEAD
-=======
 	public static void method61072(String main) {
 		System.out.println("Method written by bigboi61072"); 
 		
 	}
 
 
-
-
->>>>>>> branch 'master' of https://github.com/naikasameer/GPNOV18.git
 	public static void method61082(String main) {
 		System.out.println("Method written by 61082");
 	}
@@ -80,11 +75,8 @@ public class EnterpriseAppApplication {
 	public static void method11988(String main) {
 		System.out.println("Method written by 11988");
 	}
-<<<<<<< HEAD
 
-}
-=======
->>>>>>> branch 'master' of https://github.com/naikasameer/GPNOV18.git
+
 
 
 
