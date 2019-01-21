@@ -1,6 +1,6 @@
 package com.mastek.EnterpriseApp.entities;
 
-public class Entity61076 {
+public class Entity61082 {
 
 	int id;
 	String name;
@@ -17,4 +17,7 @@ public class Entity61076 {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	
+	
 }
