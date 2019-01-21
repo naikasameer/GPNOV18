@@ -1,7 +1,7 @@
 package com.mastek.EnterpriseApp.entities;
 
 public class Entity61079 {
-	//comment
+	//comment2
 	int id;
 	String name;
 	public int getId() {
