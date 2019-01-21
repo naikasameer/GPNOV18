@@ -16,6 +16,11 @@ public class EnterpriseAppApplication {
 		System.out.println(message);
 		
 	}
+
+
+	public static void method61082(String main) {
+		System.out.println("Method written by 61082");
+	}
 	
 	public static void method61081(String main) {
 		System.out.println("👌🔥  Method written by 61081 🔥 👌");
@@ -25,6 +30,7 @@ public class EnterpriseAppApplication {
 		System.out.println("Method returned by 61077");
 		
 	}
+
 	public static void method61089(String main) {
 		System.out.println("Method returned by 61089");
 
@@ -32,5 +38,9 @@ public class EnterpriseAppApplication {
 	public static void method11988(String main) {
 		System.out.println("Method written by 11988");
 	}
+<<<<<<< HEAD
+=======
+	
+>>>>>>> branch 'master' of https://github.com/naikasameer/GPNOV18.git
 }
 
