@@ -22,7 +22,7 @@ public class EnterpriseAppApplication {
 	}
 	
 	public static void method61081(String main) {
-		System.out.println("👌🔥 Method written by 61081🔥👌");
+		System.out.println("👌🔥  Method written by 61081🔥👌");
 	}
 
 	public static void method61079(String main) {
