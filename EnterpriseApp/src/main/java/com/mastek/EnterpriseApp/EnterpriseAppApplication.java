@@ -20,5 +20,10 @@ public class EnterpriseAppApplication {
 public static void method61073(String main) {
 	System.out.println("Method written by Mike - 61073");
 }
+	
+public static void method11988(String main) {
+		System.out.println("Method written by 11988");
+	}
+	
 
 }
