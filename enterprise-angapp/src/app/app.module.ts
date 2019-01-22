@@ -11,19 +11,6 @@ import { Comp61086Component } from './comp61086/comp61086.component';
 import { Comp61078Component } from './comp61078/comp61078.component';
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,25 +24,7 @@ import { Comp61078Component } from './comp61078/comp61078.component';
   
 
 
-    Comp61086Component,
-
-    Comp61078Component,
-
-    Comp61081Component,
-
-    Comp61084Component,
-
-    Comp61073Component,
-
-    Comp61081Component,
-    Comp61084Component,
-    Comp61073Component,
     
-    Comp61081Component,
-    Comp61084Component,
-    Comp61073Component,
-    Comp61084Component,
-    Comp61073Component,
 
   ],
   imports: [
