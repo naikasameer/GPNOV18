@@ -8,13 +8,18 @@ import { AppComponent } from './app.component';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Comp61079Component } from './comp61079/comp61079.component';
 =======
 import { Comp61081Component } from './comp61081/comp61081.component';
 >>>>>>> b622912368f1e491afc65dfc682fc333bb9055f0
 =======
 =======
+import { Comp61086Component } from './comp61086/comp61086.component';
+>>>>>>> 7c9f771f980656b7f3ecd478b817dffb91ad05c6
+=======
 import { Comp61078Component } from './comp61078/comp61078.component';
+>>>>>>> 8713d6181353bf134edddb8be660f747981d369e
 =======
 <<<<<<< HEAD
 =======
@@ -42,6 +47,7 @@ import { Comp61081Component } from './comp61081/comp61081.component';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     Comp61079Component
 =======
     Comp61081Component
@@ -51,7 +57,11 @@ import { Comp61081Component } from './comp61081/comp61081.component';
 >>>>>>> 1df0a853fd3ad04f19954dc9276a5197c11098a2
 =======
 =======
+    Comp61086Component
+>>>>>>> 7c9f771f980656b7f3ecd478b817dffb91ad05c6
+=======
     Comp61078Component
+>>>>>>> 8713d6181353bf134edddb8be660f747981d369e
 =======
 <<<<<<< HEAD
 =======
