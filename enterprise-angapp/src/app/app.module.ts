@@ -1,8 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -19,6 +19,18 @@ import { Comp61081Component } from './comp61081/comp61081.component';
 import { Comp61086Component } from './comp61086/comp61086.component';
 >>>>>>> 7c9f771f980656b7f3ecd478b817dffb91ad05c6
 =======
+=======
+
+import { Comp61072Component } from './comp61072/comp61072.component';
+import { Comp61081Component } from './comp61081/comp61081.component';
+import { Comp61084Component } from './comp61084/comp61084.component';
+import { Comp61073Component } from './comp61073/comp61073.component';
+import { Comp61086Component } from './comp61086/comp61086.component';
+import { Comp61078Component } from './comp61078/comp61078.component';
+
+
+
+>>>>>>> e825fb358b1f2faa2cb3d4468cd4e01b438d064b
 =======
 import { Comp61086Component } from './comp61086/comp61086.component';
 
@@ -38,6 +50,7 @@ import { Comp61081Component } from './comp61081/comp61081.component';
 >>>>>>> 5c85d18b54ec9b91cb3bf0be8a6c966a4862e75a
 import { Comp61084Component } from './comp61084/comp61084.component';
 import { Comp61073Component } from './comp61073/comp61073.component';
+>>>>>>> 626dd84f1d3bee02b76f7f3c6849049ecfd60ab4
 
 
 
@@ -46,6 +59,7 @@ import { Comp61073Component } from './comp61073/comp61073.component';
 @NgModule({
   declarations: [
     AppComponent,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -88,6 +102,17 @@ import { Comp61073Component } from './comp61073/comp61073.component';
     Comp61073Component
 >>>>>>> ccd07b32c8621eb85e0eed1037a31a1827fe7a4e
 =======
+    Comp61072Component,
+    Comp61081Component,
+    Comp61084Component,
+    Comp61086Component,
+    Comp61078Component,
+    Comp61073Component,
+ 
+  
+
+>>>>>>> e825fb358b1f2faa2cb3d4468cd4e01b438d064b
+=======
 
     Comp61086Component,
 
@@ -98,6 +123,7 @@ import { Comp61073Component } from './comp61073/comp61073.component';
     Comp61073Component,
     Comp61084Component,
     Comp61073Component,
+>>>>>>> 626dd84f1d3bee02b76f7f3c6849049ecfd60ab4
 
 >>>>>>> 5c85d18b54ec9b91cb3bf0be8a6c966a4862e75a
   ],
