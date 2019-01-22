@@ -21,6 +21,7 @@ import { Comp61073Component } from './comp61073/comp61073.component';
 
 import { Comp61082Component } from './comp61082/comp61082.component';
 import { Comp61089Component } from './comp61089/comp61089.component';
+import { Comp61083Component } from './comp61083/comp61083.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,7 @@ import { Comp61089Component } from './comp61089/comp61089.component';
 
 
     Comp61081Component,
-
+    Comp61083Component,
 
     Comp61072Component,
     Comp61081Component,
