@@ -1,0 +1,292 @@
+body{
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.header-container{
+    display:flex;
+    height:12vh;
+    background-color:white;
+    flex-direction : row;
+    align-items: center;
+    justify-content: space-around;
+    position: fixed;                        /*Determined whether header moves with scrolling*/
+    width: 100%;
+}
+
+.branding{
+    height:10vh;
+    width:20vw;
+}
+    
+.branding img{
+    height:10vh;
+    width:15vw;
+}
+
+.nav-bar ul{
+    list-style-type: none;
+}
+.nav-bar ul li{
+    display: inline;
+    padding:1em;
+}
+.nav-bar ul li a{
+    text-decoration: none;
+    color:black;
+}
+.nav-bar ul li a:hover{
+    color:teal;
+    background-color:gray;
+    background-size:10px;
+}
+
+    
+.search-tool img{
+    height:4vh;
+    width:2.5vw;
+    
+}
+
+.header2{
+    margin:8.5vh;
+    display:flex;
+    height:5vh;
+    background-color:white;
+    opacity:0.5;
+    flex-direction : row;
+    align-items: left;
+    justify-content: space-around;
+    position:fixed;                        /*Determined whether header moves with scrolling*/
+    width: 115%;
+
+}
+
+.h2txt{
+    opacity:1;
+
+}
+
+    
+
+/* Hero unit css */
+
+.hero-unit-container{
+    background: url('../images/background.jpg')  no-repeat;
+    background-position-y:0.80in;
+    background-position-x:-1.4in;
+    height:60vh;
+    text-align: center;
+    
+}
+.hero-unit-mask{
+    color:darkblue;
+    
+  
+}
+.hero-unit-mask h1{
+    padding-top:30vh;
+    margin:0;
+    font-size: 3em;
+    text-align:left;
+    text-indent:1in;
+}
+
+.hero-unit-mask p{
+    color:black;
+    font-size:1em;
+    text-align:left;
+    text-indent:1in;
+}
+
+
+.paper-flex-container{
+    display: flex;
+    flex-direction: column;   
+    background-color: white;    
+}
+
+.paper-flex-container h1{
+    font-size : 1.5em;
+    margin:1em auto;
+    color:teal;
+}
+.paper-flex-row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    
+}
+
+.paper{
+    height:370px;
+    width:250px;
+    background-color: white;
+    text-align: center;
+    box-shadow: 0 0 20px grey;
+    padding:1em;
+    margin:1em;
+}
+.paper h2{
+    font-size:1em;
+    color:mediumblue;
+}
+.paper img{
+    height:200px;
+    width:150px;
+}
+
+.paper p{
+    font-size: 0.8em;
+    color:teal;
+    padding:1em;
+}
+
+/* footer css */
+footer{
+    height: 10vh;
+    background-color: teal;
+    border-top:2px solid coral;
+    text-align: center;
+    padding-top:2em;
+    color:white;
+}
+
+/* Media Queries */
+
+/* Extra Small Devices */
+@media(max-width:575px){
+    .header-container{
+        height:15vh;
+    }
+    .branding{
+        height: 10vh;
+        width:20vw;
+    }
+    .branding img{
+        height: 10vh;
+        width:20vw;
+    }
+    .nav-bar ul{
+        margin:0;
+        padding:0;
+    }
+
+    .nav-bar ul li{
+        display: block;
+        padding:0 0 0.5em 0;
+    }
+
+    .nav-bar ul li a{
+        font-size: 0.8em;
+    }
+    .nav-bar ul li a:hover{
+        padding-bottom:0.5em;
+    }
+
+    button{
+        width:20vw;
+    }
+
+    .hero-unit-container{
+        height:60vh;
+    }
+    .hero-unit-mask{
+        height: 60vh;
+    }
+    .hero-unit-mask h1{
+        padding-top:25vh;
+    }
+    .hero-unit-mask a{
+        width:15vw;
+    }
+
+    .paper-flex-row{
+        flex-direction: column;
+    }
+}
+
+/* Small Devices */
+@media(min-width:576px) and (max-width:767px){
+    .header-container{
+        height: 15vh;
+    }
+    .branding{
+        height:10vh;
+        width:20vw;
+    }
+    .branding img{
+        height:10vh;
+        width:20vw;
+    }
+
+    .nav-bar ul{
+        margin:0;
+        padding:0;
+    }
+
+    .nav-bar ul li{
+        display: block;
+        padding:0 0 0.5em 0;
+    }
+
+    .nav-bar ul li a{
+        font-size: 0.8em;
+    }
+    .nav-bar ul li a:hover{
+        padding-bottom:0.5em;
+    }
+
+    button{
+        width:20vw;
+    }
+
+    .hero-unit-container{
+        height:60vh;
+    }
+    .hero-unit-mask{
+        height: 60vh;
+    }
+    .hero-unit-mask h1{
+        padding-top:30vh;
+    }
+    .hero-unit-mask a{
+        width:15vw;
+    }
+
+    .paper-flex-row{
+        flex-direction: column;
+    }
+}
+
+/* Medium Devices */
+@media(min-width:768px) and (max-width:920px){
+    .header-container{
+        height:15vh;
+    }
+    .branding{
+        height:10vh;
+        width:20vw;
+    }
+    .branding img{
+        height:10vh;
+        width:20vw;
+    }
+    button{
+        width:18vw;
+    }
+    .hero-unit-container{
+        height: 60vh;
+    }
+    .hero-unit-mask{
+        height: 60vh;
+    }
+    .hero-unit-mask h1{
+        color:#fff;
+        font-size:3.5em;
+        padding-top:30vh;
+    }
+    .hero-unit-mask a{
+        width:18vw;
+    }
+}

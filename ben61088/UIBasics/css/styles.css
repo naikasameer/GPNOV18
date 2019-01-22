@@ -1,0 +1,45 @@
+
+div{
+    color: aquamarine;
+    background-color: gray;
+    /*font styles*/
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:10pt;
+    font-variant:small-caps;
+    font-stretch: extra-expanded;
+
+    /*border*/
+    border: 2pt solid blueviolet;
+}
+
+span{
+    background-color: teal;
+    /*text-styles*/
+    text-decoration:underline;
+    text-indent:0.5in;
+    border-color: darkred yellowgreen;
+}
+
+p{
+    color: midnightblue
+}
+
+h1{
+    font-size: 14pt
+}
+
+table{
+    color: midnightblue
+}
+
+title{
+    color:midnightblue
+}
+
+h2{
+    color:midnightblue
+}
+
+h1{
+    color:midnightblue
+}

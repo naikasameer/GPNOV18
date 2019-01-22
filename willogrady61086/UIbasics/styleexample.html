@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>StyleSheets</title>
+    <!--Linked stylesheet for all pages in the site lowest priority-->
+    <link rel="stylesheet" type="text/css" href="CSS/styles.css">
+    <!--embedded stylesheet for all tags only in current document second highest priority-->
+    <style>
+        span{
+            color: darkcyan
+        }
+    
+    </style>
+
+</head>
+<body>
+    <div style="background-color: rgb(223, 255, 205)">This is a division for Header</div>
+    <div>This is a division of <Body>
+        <!--inline styles: applicable only for the current HTML element highest priority-->
+        <Span style="background-color: rgb(107, 119, 189);color: aqua">Content in span area 1</Span>
+        <Span>Content in span area 2</Span>
+        <Span>Content in span area 3</Span>
+        
+    </div>
+    <div>This is a division of Footer</div>
+    
+</body>
+</html>

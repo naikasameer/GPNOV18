@@ -1,0 +1,29 @@
+/* Move down content because we have a fixed navbar that is 3.5rem tall */
+body {
+  padding-top: 3.5rem;
+}
+
+.jumbotron {
+  margin-top: 20px;
+  background-image: url(images/digital-transformation-hero.jpg);
+  background-size: cover;
+  color: white;
+
+}
+
+.row {
+  padding-left: 1.3in;
+  padding-right: 1in;
+  
+}
+
+.approach{
+  background-color: teal;
+  color:white
+
+}
+
+.featurette-heading{
+  color:darkblue;
+}
+

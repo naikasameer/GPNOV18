@@ -1,0 +1,118 @@
+<html>
+    <head>
+        <title>My Information Forms</title>
+    </head>
+
+    <body>
+        <h1>My Information Form</h1>
+
+        <form id="info-form" method="GET" action="myinfo.svc">
+            <table border="1">
+                <tr>
+                    <td>Employee Number:</td>
+                    <td>
+                        <input name="empno" size="10" maxlength="6" placeholder="Enter empno"> <!--default type = text-->
+                    </td>
+                </tr>
+                <tr>
+                    <td>Employee PIN:</td>
+                    <td>
+                        <input name="pin" type="password" size="10" maxlength="4"> 
+                    </td>
+                </tr>
+                <tr>
+                    <td>Breif Introduction::</td>
+                    <td>
+                         <textarea rows="3" cols="25">Enter your Info</textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Gender:</td>
+                    <td>
+                        <input type="radio" name="gender" value="M">Male<br/> <!--<br> puts next button below instead of at the side-->
+                        <input type="radio" name="gender" value="F">Female
+                    </td>
+                </tr>
+                <tr>
+                    <td>Interests</td>
+                    <td>
+                        <input type="checkbox" name="interests" value="BI">Business Intelligence
+                        <input type="checkbox" name="interests" value="AD">Application Development<br/>
+                        <input type="checkbox" name="interests" value="AT">Assurance and Testing
+                        <input type="checkbox" name="interests" value="AS">Application Support
+                    </td>
+                </tr>
+                <tr>
+                    <td>Location:</td>
+                    <td>
+                        <select name="location">
+                            <option value="NA">Select your location</option>
+                            <option value="LS">Leeds</option>
+                            <option value="RD">Readings</option>
+                            <option value="DS">Dallas</option>
+                            <option value="MHP">Mahape</option>
+                            <option value="SPZ">Seepz</option>
+                            <option value="PNQ">Pune</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                        <td>Skills:</td>
+                        <td>
+                            <select name="skills" size="3" multiple="yes">
+                                <option value="J">Java</option>
+                                <option value="DN">.Net</option>
+                                <option value="SQL">SQL</option>
+                                <option value="PY">Python</option>
+                                <option value="RB">Ruby</option>
+                            </select>
+                        </td>
+                </tr>
+                <tr>
+                    <td>Contact Number:</td>
+                    <td>
+                        <input type="number" name="mobile">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Contact Email:</td>
+                    <td>
+                        <input type="email" name="email">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Joining Date:</td>
+                    <td>
+                        <input type="date" name="joindate">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Years of Experience</td>
+                    <td>
+                        0<input type="range" name="exp" min="0" max="60" value="2">60 <!--makes slider-->
+                    </td>
+                </tr>
+                <tr>
+                    <td>Upload Picture:</td>
+                    <td>
+                        <input type="file" name="picture">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Select Favourite Colour:</td>
+                    <td>
+                        <input type="color" name="favcolor">
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        <input type="submit" value="Save Info">
+                    </td>
+                    <td>
+                        <input type="reset" value="Reset Info">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>

@@ -1,0 +1,38 @@
+
+
+.navbar .navbar-nav .nav-link {
+    color: black;
+}
+
+
+
+.navbar .navbar-nav .nav-link .dropdown-item {
+    color: black;
+}
+
+.jumbotron {
+    background-image:url(digital-transformation-hero.jpg) ;
+    max-width: 100%;
+    background-position: center;
+    
+    height: 80vh;
+    
+    
+}
+
+    .jumbotron .container{
+    color: white;
+    font-weight: 100;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.jumbotron .container p {
+    font-size: 20px;
+    opacity: unset;
+}
+
+#square {
+    background-color: aqua;
+    opacity: 0.7;
+    float: left;
+}

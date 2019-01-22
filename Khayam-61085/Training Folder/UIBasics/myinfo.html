@@ -1,0 +1,153 @@
+<html>
+
+<head>
+    
+    <title>My Information Form</title> 
+
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+
+</head>
+
+<body>
+
+        <h1>My Information Form</h1>
+
+        <form id="info-form" method="GET" action="myinfo.cvc">
+
+        <table>
+
+            <tr>
+
+                <td>Employee Number:</td>
+                <td><input name="empno" size="10" placeholder="Enter no" maxlength="6"></td>
+
+            </tr>
+
+            <tr>
+
+                <td>Employee Pin:</td>
+                <td><input name="empno" type="password" size="10" placeholder="Enter OTP" maxlength="4"></td>
+    
+            </tr>
+
+            <tr>
+
+                <td>Brief Introduction:</td>
+                <td><textarea rows="3" cols="25">Enter your info</textarea></td>
+    
+                </tr>
+
+                <tr>
+
+                        <td>Gender:</td>
+                        <td><input type="radio" name="gender" value="M"> Male <br>
+                        <input type="radio" name="gender" value="F"> Female</td>
+                        </tr>
+
+                <tr>
+
+                        <td>Interests:</td>
+                        <td><input type="checkbox" name="interests" value="BI"> Buisness Inteligence <br>
+                        <input type="checkbox" name="interests" value="AD"> Application Development <br>
+                        <input type="checkbox" name="interests" value="AT"> Assurance Testing <br>
+                        <input type="checkbox" name="interests" value="AS"> Application Support <br>
+                       
+                    </td>
+                    </tr>
+
+                    <tr>
+
+                        <td>location</td>
+                        <td>
+
+                            <select name="location">
+
+                                <option value="LS">Leeds</option>
+                                <option value="RD">Reading</option>
+                                <option value="PNQ">Pune</option>
+                                <option value="MHP">Mahape</option>
+                                <option value="SPZ">Seepz</option>
+                                
+                                </select>
+                            
+                            </td>
+                            </tr>
+
+
+                            <td>Skills</td>
+                            <td>
+    
+                                <select name="Skills" size="3" multiple="yes">
+                                    
+                                    <option value="J">Java</option>
+                                    <option value="DN">.NET</option>
+                                    <option value="SQL">SQL</option>
+                                    <option value="PY">Phython</option>
+                                    <option value="RB">Ruby</option>
+                                    
+                                </select>
+                                
+                                </td>
+                                </tr>
+
+                                
+                                <tr>
+
+                                        <td>Years of Experience:</td>
+                                        <td><input type="range" name="exp" min="0" max="60" value="2">60 
+                                        
+                                 </td>
+                                 </tr>
+
+                                <tr>
+
+                                        <td>Contact Number:</td>
+                                        <td><input type="number" name="mobile"> 
+                                        
+                                 </td>
+                                 </tr>
+
+                                 <tr>
+
+                                        <td>Joining Data:</td>
+                                        <td><input type="Date" name="joindata"> 
+                                        
+                                 </td>
+                                 </tr>
+
+                                 <tr>
+
+                                        <td>Contact Email:</td>
+                                        <td><input type="email" name="email"> 
+                                        
+                                 </td>
+                                 </tr>
+
+                                 <tr>
+
+                                        <td>Upload Picture:</td>
+                                        <td><input type="file" name="picture"> 
+                                        
+                                 </td>
+                                 </tr>
+
+                                 <tr>
+
+                                        <td>Select Favorite:</td>
+                                        <td><input type="color" name="favcolor"> 
+                                        
+                                 </td>
+                                 </tr>
+
+                                 <tr>
+
+                                    <td align="right"><input type="submit" value="Submit"></td>
+                                    <td><input type="reset" name="Reset Info"</td>
+
+                                 </tr>
+     </table>
+     </form>
+
+
+    </body>s
+</html>

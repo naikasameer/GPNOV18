@@ -1,0 +1,2334 @@
+(function ($, Drupal) {
+  Drupal.behaviors.coherenceHubspotForms = {
+    attach: function (context, settings) {
+      if (typeof settings.coherenceHubSpot.forms !== 'undefined') {
+        for (var key in settings.coherenceHubSpot.forms) {
+          if (settings.coherenceHubSpot.forms.hasOwnProperty(key)) {
+
+            var item = settings.coherenceHubSpot.forms[key];
+            hbspt.forms.create({
+              css: '',
+              portalId: item.portalId,
+              formId: item.formId,
+              target: item.selector
+            });
+          }
+        }
+      }
+
+    }
+  };
+})(jQuery, Drupal);;
+!function($,window,undefined){var defaults={active:null,event:"click",disabled:[],collapsible:"accordion",startCollapsed:!1,rotate:!1,setHash:!1,animation:"default",animationQueue:!1,duration:500,fluidHeight:!0,scrollToAccordion:!1,scrollToAccordionOnLoad:!1,scrollToAccordionOffset:0,accordionTabElement:"<div></div>",click:function(){},activate:function(){},activateFinished:function(){},deactivate:function(){},load:function(){},activateState:function(){},classes:{stateDefault:"r-tabs-state-default",stateActive:"r-tabs-state-active",stateDisabled:"r-tabs-state-disabled",stateExcluded:"r-tabs-state-excluded",stateTypePrefix:"r-tabs-state",container:"r-tabs",ul:"r-tabs-nav",tab:"r-tabs-tab",anchor:"r-tabs-anchor",panel:"r-tabs-panel",accordionTitle:"r-tabs-accordion-title"}},events=["tabs-click","tabs-activate","tabs-activate-finished","tabs-deactivate","tabs-activate-state","tabs-load","tabs-refresh"];function ResponsiveTabs(element,options){this.element=element,this.$element=$(element),this.tabs=[],this.panels=[],this.tabItems=[],this.tabItemAnchors=[],this.accordionItems=[],this.accordionItemAnchors=[],this.state="",this.rotateInterval=0,this.$queue=$({}),this.options=$.extend({},defaults,options),this.init()}ResponsiveTabs.prototype.init=function(){var _this=this;if(this.tabs=this._loadElements(),this._loadClasses(),this._loadEvents(),$(window).on("resize",function(e){if(_this._setState(e),!0!==_this.options.fluidHeight)_this._equaliseHeights()}),$(window).on("hashchange",function(e){var tabRef=_this._getTabRefBySelector(window.location.hash),oTab=_this._getTab(tabRef);if(0<=tabRef&&!oTab._ignoreHashChange&&!oTab.disabled)_this._openTab(e,_this._getTab(tabRef),!0)}),!1!==this.options.rotate)this.startRotation();if(!0!==this.options.fluidHeight)_this._equaliseHeights();this.$element.bind("tabs-click",function(e,oTab){_this.options.click.call(this,e,oTab)}),this.$element.bind("tabs-activate",function(e,oTab){_this.options.activate.call(this,e,oTab)}),this.$element.bind("tabs-activate-finished",function(e,oTab){_this.options.activateFinished.call(this,e,oTab)}),this.$element.bind("tabs-deactivate",function(e,oTab){_this.options.deactivate.call(this,e,oTab)}),this.$element.bind("tabs-activate-state",function(e,state){_this.options.activateState.call(this,e,state)}),this.$element.bind("tabs-load",function(e){var startTab;if(e.stopPropagation(),_this._setState(e),!0!==_this.options.startCollapsed&&("accordion"!==_this.options.startCollapsed||"accordion"!==_this.state)){startTab=_this._getStartTab();var cacheAnimationType=_this.options.animation;_this.options.animation="default",_this._openTab(e,startTab),_this.options.animation=cacheAnimationType,_this.options.load.call(this,e,startTab)}}),this.$element.trigger("tabs-load",_this)},ResponsiveTabs.prototype._loadElements=function(){var _this=this,$ul=this.$element.children("ul:first"),tabs=[],id=0;return this.$element.addClass(_this.options.classes.container),$ul.addClass(_this.options.classes.ul),$(".coh-accordion-tabs-content-wrapper:first",this.$element).find("."+_this.options.classes.accordionTitle).not($(".coh-accordion-tabs-content-wrapper .coh-accordion-tabs .coh-accordion-title",this.$element)).once("tab-init").each(function(){var $panel,panelSelector,$tab,$tabAnchor,tabSettings,$accordionTab=$(this),$anchor=$("a",$accordionTab);if(!$accordionTab.hasClass(_this.options.classes.stateExcluded)){panelSelector=$anchor.attr("href"),($panel=$(panelSelector)).hide(),tabSettings=$accordionTab.data("cohTabSettings"),($tab=$("<li />").appendTo($ul)).addClass(tabSettings.customStyle),$tabAnchor=$("<a />",{href:panelSelector}).html($anchor.html()).appendTo($tab);var oTab={_ignoreHashChange:!1,id:id,disabled:void 0!==tabSettings.disabled?tabSettings.disabled:!1,tab:$tab,anchor:$tabAnchor,panel:$panel,selector:panelSelector,accordionTab:$accordionTab,accordionAnchor:$anchor,active:!1,linkUrl:void 0!==tabSettings.linkUrl?tabSettings.linkUrl:!1,linkTarget:void 0!==tabSettings.linkTarget?tabSettings.linkTarget:!1,hide:void 0!==tabSettings.hide?tabSettings.hide:!1};id++,tabs.push(oTab),_this.panels.push(oTab.panel),_this.tabItems.push(oTab.tab),_this.tabItemAnchors.push(oTab.anchor),_this.accordionItems.push(oTab.accordionTab),_this.accordionItemAnchors.push(oTab.accordionAnchor)}}),tabs},ResponsiveTabs.prototype._loadClasses=function(){for(var i=0;i<this.tabs.length;i++)if(this.tabs[i].tab.addClass(this.options.classes.stateDefault).addClass(this.options.classes.tab),this.tabs[i].anchor.addClass(this.options.classes.anchor),this.tabs[i].panel.addClass(this.options.classes.stateDefault).addClass(this.options.classes.panel),this.tabs[i].accordionTab.addClass(this.options.classes.accordionTitle),this.tabs[i].accordionAnchor.addClass(this.options.classes.anchor),this.tabs[i].disabled)this.tabs[i].tab.removeClass(this.options.classes.stateDefault).addClass(this.options.classes.stateDisabled),this.tabs[i].accordionTab.removeClass(this.options.classes.stateDefault).addClass(this.options.classes.stateDisabled)},ResponsiveTabs.prototype._loadEvents=function(){for(var _this=this,fActivate=function(e){var current=_this._getCurrentTab(),activatedTab=e.data.tab;if(e.preventDefault(),!1===activatedTab.linkUrl){if(activatedTab.tab.trigger("tabs-click",activatedTab),!activatedTab.disabled||!1===activatedTab.linkUrl){if(_this.options.setHash)if(history.pushState){if(!window.location.origin)window.location.origin=window.location.protocol+"//"+window.location.hostname+(window.location.port?":"+window.location.port:"");history.pushState(null,null,window.location.origin+window.location.pathname+window.location.search+activatedTab.selector)}else window.location.hash=activatedTab.selector;if(e.data.tab._ignoreHashChange=!0,current!==activatedTab||_this._isCollapisble())if(_this._closeTab(e,current),current!==activatedTab||!_this._isCollapisble())_this._openTab(e,activatedTab,!1,!0)}}else window.open(activatedTab.linkUrl,activatedTab.linkTarget)},i=0;i<this.tabs.length;i++)this.tabs[i].anchor.once("loadEvent").on(_this.options.event,{tab:_this.tabs[i]},fActivate),this.tabs[i].accordionAnchor.once("loadEvent").on(_this.options.event,{tab:_this.tabs[i]},fActivate)},ResponsiveTabs.prototype._getStartTab=function(){var startTab,tabRef=this._getTabRefBySelector(window.location.hash);if(0<=tabRef&&!this._getTab(tabRef).disabled)startTab=this._getTab(tabRef);else if(0<this.options.active&&!this._getTab(this.options.active).disabled)startTab=this._getTab(this.options.active);else startTab=this._getTab(0);return startTab},ResponsiveTabs.prototype._setState=function(e){var startTab,$ul=$("ul:first",this.$element),oldState=this.state,startCollapsedIsState="string"==typeof this.options.startCollapsed,visible=$ul.is(":visible");if(visible)this.state="tabs";else this.state="accordion";if(this.state!==oldState)if(this.$element.toggleClass(this.options.classes.stateTypePrefix+"-tabs",visible),this.$element.toggleClass(this.options.classes.stateTypePrefix+"-accordion",!visible),this.$element.trigger("tabs-activate-state",{oldState:oldState,newState:this.state,tabs:this}),oldState&&startCollapsedIsState&&this.options.startCollapsed!==this.state&&void 0===this._getCurrentTab())startTab=this._getStartTab(e),this._openTab(e,startTab)},ResponsiveTabs.prototype._openTab=function(e,oTab,closeCurrent,stopRotation){var scrollOffset,_this=this;if(void 0!==oTab){if(closeCurrent)this._closeTab(e,this._getCurrentTab());if(stopRotation&&0<this.rotateInterval)this.stopRotation();oTab.active=!0,oTab.tab.removeClass(_this.options.classes.stateDefault).addClass(_this.options.classes.stateActive),oTab.accordionTab.removeClass(_this.options.classes.stateDefault).addClass(_this.options.classes.stateActive),_this._doTransition(oTab,_this.options.animation,"open",function(){var scrollOnLoad="tabs-load"!==e.type||_this.options.scrollToAccordionOnLoad;if(oTab.panel.removeClass(_this.options.classes.stateDefault).addClass(_this.options.classes.stateActive),"accordion"===_this.getState()&&_this.options.scrollToAccordion&&(!_this._isInView(oTab.accordionTab)||"default"!==_this.options.animation)&&scrollOnLoad)if(scrollOffset=oTab.accordionTab.offset().top-_this.options.scrollToAccordionOffset,"default"!==_this.options.animation&&0<_this.options.duration)$("html, body").animate({scrollTop:scrollOffset},_this.options.duration);else $("html, body").animate({scrollTop:scrollOffset},1)}),this.$element.trigger("tabs-activate",oTab)}},ResponsiveTabs.prototype._closeTab=function(e,oTab){var doQueue,_this=this,doQueueOnState="string"==typeof _this.options.animationQueue;if(void 0!==oTab){if(doQueueOnState&&_this.getState()===_this.options.animationQueue)doQueue=!0;else if(doQueueOnState)doQueue=!1;else doQueue=_this.options.animationQueue;oTab.active=!1,oTab.tab.removeClass(_this.options.classes.stateActive).addClass(_this.options.classes.stateDefault),_this._doTransition(oTab,_this.options.animation,"close",function(){oTab.accordionTab.removeClass(_this.options.classes.stateActive).addClass(_this.options.classes.stateDefault),oTab.panel.removeClass(_this.options.classes.stateActive).addClass(_this.options.classes.stateDefault)},!doQueue),this.$element.trigger("tabs-deactivate",oTab)}},ResponsiveTabs.prototype._doTransition=function(oTab,method,state,callback,dequeue){var effect,_this=this,duration=_this.options.duration;switch(method){case"slide":effect="open"===state?"slideDown":"slideUp",duration=_this.options.duration;break;case"fade":effect="open"===state?"fadeIn":"fadeOut",duration=_this.options.duration;break;default:effect="open"===state?"show":"hide",duration=0}if("fade"===_this.options.animation&&"tabs"===_this.state)effect="open"===state?effect:"hide",duration="open"===state?duration:0,oTab.panel.css("opacity","");oTab.panel[effect]({duration:duration,queue:"responsive-tabs-"+state,complete:function(){callback.call(oTab.panel,method,state),_this.$element.trigger("tabs-activate-finished",oTab)}}).dequeue("responsive-tabs-"+state)},ResponsiveTabs.prototype._isCollapisble=function(){return"boolean"==typeof this.options.collapsible&&this.options.collapsible||"string"==typeof this.options.collapsible&&this.options.collapsible===this.getState()},ResponsiveTabs.prototype._getTab=function(numRef){return this.tabs[numRef]},ResponsiveTabs.prototype._getTabRefBySelector=function(selector){for(var i=0;i<this.tabs.length;i++)if(this.tabs[i].selector===selector)return i;return-1},ResponsiveTabs.prototype._getCurrentTab=function(){return this._getTab(this._getCurrentTabRef())},ResponsiveTabs.prototype._getNextTabRef=function(currentTabRef){var tabRef=currentTabRef||this._getCurrentTabRef(),nextTabRef=tabRef===this.tabs.length-1?0:tabRef+1;return this._getTab(nextTabRef).disabled?this._getNextTabRef(nextTabRef):nextTabRef},ResponsiveTabs.prototype._getPreviousTabRef=function(){return 0===this._getCurrentTabRef()?this.tabs.length-1:this._getCurrentTabRef()-1},ResponsiveTabs.prototype._getCurrentTabRef=function(){for(var i=0;i<this.tabs.length;i++)if(this.tabs[i].active)return i;return-1},ResponsiveTabs.prototype._equaliseHeights=function(){var maxHeight=0;$.each($.map(this.tabs,function(tab){return maxHeight=Math.max(maxHeight,tab.panel.css("minHeight","").height()),tab.panel}),function(){this.css("minHeight",maxHeight)})},ResponsiveTabs.prototype._isInView=function($element){var docViewTop=$(window).scrollTop(),docViewBottom=docViewTop+$(window).height(),elemTop=$element.offset().top;return elemTop+$element.height()<=docViewBottom&&docViewTop<=elemTop},ResponsiveTabs.prototype.getCurrentTab=function(){return this._getCurrentTabRef()},ResponsiveTabs.prototype.getPreviousTab=function(){return this._getPreviousTabRef()},ResponsiveTabs.prototype.activate=function(tabRef,stopRotation){var e=jQuery.Event("tabs-activate"),oTab=this._getTab(tabRef);if(!oTab.disabled)this._openTab(e,oTab,!0,stopRotation||!0)},ResponsiveTabs.prototype.deactivate=function(tabRef){var e=jQuery.Event("tabs-dectivate"),oTab=this._getTab(tabRef);if(!oTab.disabled)this._closeTab(e,oTab)},ResponsiveTabs.prototype.enable=function(tabRef){var oTab=this._getTab(tabRef);if(oTab)oTab.disabled=!1,oTab.tab.addClass(this.options.classes.stateDefault).removeClass(this.options.classes.stateDisabled),oTab.accordionTab.addClass(this.options.classes.stateDefault).removeClass(this.options.classes.stateDisabled)},ResponsiveTabs.prototype.disable=function(tabRef){var oTab=this._getTab(tabRef);if(oTab)oTab.disabled=!0,oTab.tab.removeClass(this.options.classes.stateDefault).addClass(this.options.classes.stateDisabled),oTab.accordionTab.removeClass(this.options.classes.stateDefault).addClass(this.options.classes.stateDisabled)},ResponsiveTabs.prototype.getState=function(){return this.state},ResponsiveTabs.prototype.startRotation=function(speed){var _this=this;if(this.tabs.length>this.options.disabled.length)this.rotateInterval=setInterval(function(){var e=jQuery.Event("rotate");_this._openTab(e,_this._getTab(_this._getNextTabRef()),!0)},speed||($.isNumeric(_this.options.rotate)?_this.options.rotate:4e3));else throw new Error("Rotation is not possible if all tabs are disabled")},ResponsiveTabs.prototype.stopRotation=function(){window.clearInterval(this.rotateInterval),this.rotateInterval=0},ResponsiveTabs.prototype.option=function(key,value){if(void 0!==value)this.options[key]=value;return this.options[key]},ResponsiveTabs.prototype.refresh=function(){if(this.tabs=this.tabs.concat(this._loadElements()),this._loadClasses(),this._loadEvents(),!0!==this.options.fluidHeight)this._equaliseHeights();return this.$element.trigger("tabs-refresh",this),this._setState(),this},$.fn.responsiveTabs=function(options){var instance,args=arguments;if(void 0===options||"object"==typeof options)return this.each(function(){if(!$.data(this,"responsivetabs"))$.data(this,"responsivetabs",new ResponsiveTabs(this,options));else $.extend($.data(this,"responsivetabs").options,options)});else if("string"==typeof options&&"_"!==options[0]&&"init"!==options){if(instance=$.data(this[0],"responsivetabs"),"destroy"===options)if(void 0!==instance){for(var i=0;i<instance.tabs.length;i++)$.each($([instance.tabs[i].accordionTab,instance.tabs[i].panel,instance.tabs[i].tab]),function(){var $this=$(this);$this.removeAttr("style"),$this.removeClass(instance.options.classes.stateActive),$this.removeClass(instance.options.classes.stateDisabled),$this.removeClass(instance.options.classes.stateExcluded)});for(i=0;i<events.length;i++)instance.$element.unbind(events[i]);for(i=0;i<instance.tabs.length;i++)instance.tabs[i].anchor.off(instance.options.event),instance.tabs[i].accordionAnchor.off(instance.options.event);$.removeData(this[0],"responsivetabs")}if(instance instanceof ResponsiveTabs&&"function"==typeof instance[options])return instance[options].apply(instance,Array.prototype.slice.call(args,1));else return this}}}(jQuery,window);;
+!function($,Drupal,drupalSettings){"use strict";Drupal.behaviors.CohesionAccordionTabs={attach:function(context){var once="cohAccordionTabs",cmm=new Drupal.CohesionResponsiveBreakpoints(drupalSettings.cohesion.responsive_grid_settings),$at=$(".coh-accordion-tabs > .coh-accordion-tabs-inner",context);function matchHeights(elements,remove){return $(elements).matchHeight({byRow:!1,remove:remove})}function tabsLoad(e,tabs){getTabSettings(tabs)}function tabsRefresh(e,tabs){var opts=tabs.options;if(void 0!==opts.contentMatchHeight)matchHeights(tabs.panels,!0===opts.contentMatchHeight?!1:!0);if(void 0!==opts.tabsMatchHeight)matchHeights(tabs.tabItemAnchors,!0===opts.tabsMatchHeight?!1:!0);getTabSettings(tabs)}function tabsStateChange(e,tabs){var opts=tabs.tabs.options;if(void 0!==opts.contentMatchHeight)matchHeights(tabs.panels,!0===opts.contentMatchHeight?!1:!0);if(void 0!==opts.tabsMatchHeight)matchHeights(tabs.tabItemAnchors,!0===opts.tabsMatchHeight?!1:!0)}function tabsActivate(e,tab){for(var i=0;i<tab.panel.length;i++)Drupal.attachBehaviors(tab.panel[i])}function updateSettings(settings){var key=settings.cohesion.key;(settings=settings.cohesion.settings).$element.responsiveTabs(settings.breakpoints[key]);for(var i=0;i<settings.act.tabs.length;i++)if(!1!==settings.act.tabs[i].hide)$(settings.act.tabs[i].accordionTab).toggleClass("is-hidden",settings.act.tabs[i].hide[key]),$(settings.act.tabs[i].tab).toggleClass("is-hidden",settings.act.tabs[i].hide[key])}function manageSettings(settings,key){if(void 0!==settings.setHash)settings.styles[key].setHash=settings.setHash;if(void 0!==settings.scrollToAccordion)settings.styles[key].scrollToAccordion=settings.scrollToAccordion;if(void 0!==settings.scrollToAccordionOffsetClass&&void 0!==settings.offsetPositionAgainst&&"class"===settings.offsetPositionAgainst){var offsetClass=settings.scrollToAccordionOffsetClass.match(/^[.]/)?settings.scrollToAccordionOffsetClass:"."+settings.scrollToAccordionOffsetClass;settings.styles[key].scrollToAccordionOffset=$(offsetClass).outerHeight(!0)}var breakpoint=settings.styles[key];if(void 0!==breakpoint.active)settings.styles[key].active=(parseInt(breakpoint.active)-1).toString();if(void 0!==breakpoint.duration&&void 0!==breakpoint.durationMs&&"custom"===breakpoint.duration)settings.styles[key].duration=parseInt(breakpoint.durationMs);else if(void 0!==breakpoint.duration&&"custom"!==breakpoint.duration)settings.styles[key].duration=parseInt(breakpoint.duration);return settings}function getTabSettings(tabs){for(var i=0;i<tabs.tabs.length;i++){var previous,key;if(!1!==tabs.tabs[i].hide&&"object"==typeof tabs.tabs[i].hide)for(var c=0;c<cmm.breakpoints.length;c++){if(key=cmm.breakpoints[c].key,void 0===tabs.tabs[i].hide[key])tabs.tabs[i].hide[key]=previous;previous=tabs.tabs[i].hide[key]}}}$.each($at,function(){var $this=$(this);$this.findOnce(once).each(function(){$this.responsiveTabs("refresh")}),$this.once(once).each(function(){var settings=function($el,settings){var defaults={classes:{stateDefault:"",stateActive:"is-active",stateDisabled:"is-disabled",stateExcluded:"is-excluded",container:"",ul:"",tab:"",anchor:"",panel:"",accordionTitle:"coh-accordion-title",stateTypePrefix:"coh-accordion-tabs-display"}};settings.breakpoints={},settings.$element=$el;for(var i=0;i<cmm.breakpoints.length;i++){var key=cmm.breakpoints[i].key;if(settings.breakpoints[key]={},$.extend(settings.breakpoints[key],defaults),"object"==typeof settings.styles[key])settings=manageSettings(settings,key),$.extend(settings.breakpoints[key],settings.styles[key]),$.extend(defaults,settings.styles[key]);if(void 0!==settings.breakpoints[key].animation)switch(settings.breakpoints[key].animation){case"slide":settings.breakpoints[key].animationQueue=!1;break;case"fade":default:settings.breakpoints[key].animationQueue=!0}}return settings}($this,$this.data("cohAccordion"));$this.on("tabs-load",tabsLoad),$this.on("tabs-refresh",tabsRefresh),$this.on("tabs-activate-state",tabsStateChange),$this.on("tabs-activate",tabsActivate),$this.responsiveTabs(settings.breakpoints[cmm.getCurrentBreakpoint().key]),settings.act=$.data(this,"responsivetabs"),cmm.addListeners(settings,updateSettings)})})}}}(jQuery,Drupal,drupalSettings);;
+/*!
+     _ _      _       _
+ ___| (_) ___| | __  (_)___
+/ __| | |/ __| |/ /  | / __|
+\__ \ | | (__|   < _ | \__ \
+|___/_|_|\___|_|\_(_)/ |___/
+                   |__/
+
+ Version: 1.9.0
+  Author: Ken Wheeler
+ Website: http://kenwheeler.github.io
+    Docs: http://kenwheeler.github.io/slick
+    Repo: http://github.com/kenwheeler/slick
+  Issues: http://github.com/kenwheeler/slick/issues
+  Forked to: https://github.com/cohesiondx8/slick
+
+ */
+!function(factory){"use strict";if("function"==typeof define&&define.amd)define(["jquery"],factory);else if("undefined"!=typeof exports)module.exports=factory(require("jquery"));else factory(jQuery)}(function($){"use strict";var instanceUid,Slick=window.Slick||{};instanceUid=0,(Slick=function(element,settings){var dataSettings,_=this;if(_.defaults={accessibility:!0,adaptiveHeight:!1,appendArrows:$(element),appendDots:$(element),arrows:!0,asNavFor:null,prevArrow:'<button class="slick-prev" aria-label="Previous" type="button">Previous</button>',nextArrow:'<button class="slick-next" aria-label="Next" type="button">Next</button>',autoplay:!1,autoplaySpeed:3e3,centerMode:!1,centerPadding:"50px",cssEase:"ease",customPaging:function(slider,i){return $('<button type="button" />').text(i+1)},dots:!1,dotsClass:"slick-dots",draggable:!0,easing:"linear",edgeFriction:.35,fade:!1,focusOnSelect:!1,focusOnChange:!1,infinite:!0,initialSlide:0,lazyLoad:"ondemand",mobileFirst:!1,pauseOnHover:!0,pauseOnFocus:!0,pauseOnDotsHover:!1,respondTo:"window",responsive:null,rows:1,rtl:!1,slide:"",slidesPerRow:1,slidesToShow:1,slidesToScroll:1,speed:500,swipe:!0,swipeToSlide:!1,touchMove:!0,touchThreshold:5,useCSS:!0,useTransform:!0,variableWidth:!1,vertical:!1,verticalSwiping:!1,waitForAnimate:!0,zIndex:1e3},_.initials={animating:!1,dragging:!1,autoPlayTimer:null,currentDirection:0,currentLeft:null,currentSlide:0,direction:1,$dots:null,listWidth:null,listHeight:null,loadIndex:0,$nextArrow:null,$prevArrow:null,scrolling:!1,slideCount:null,slideWidth:null,$slideTrack:null,$slides:null,sliding:!1,slideOffset:0,swipeLeft:null,swiping:!1,$list:null,touchObject:{},transformsEnabled:!1,unslicked:!1},$.extend(_,_.initials),_.activeBreakpoint=null,_.animType=null,_.animProp=null,_.breakpoints=[],_.breakpointSettings=[],_.cssTransitions=!1,_.focussed=!1,_.interrupted=!1,_.hidden="hidden",_.paused=!0,_.positionProp=null,_.respondTo=null,_.rowCount=1,_.shouldClick=!0,_.$slider=$(element),_.$slidesCache=null,_.transformType=null,_.transitionType=null,_.visibilityChange="visibilitychange",_.windowWidth=0,_.windowTimer=null,dataSettings=$(element).data("slick")||{},_.options=$.extend({},_.defaults,settings,dataSettings),_.currentSlide=_.options.initialSlide,_.originalSettings=_.options,void 0!==document.mozHidden)_.hidden="mozHidden",_.visibilityChange="mozvisibilitychange";else if(void 0!==document.webkitHidden)_.hidden="webkitHidden",_.visibilityChange="webkitvisibilitychange";_.autoPlay=$.proxy(_.autoPlay,_),_.autoPlayClear=$.proxy(_.autoPlayClear,_),_.autoPlayIterator=$.proxy(_.autoPlayIterator,_),_.changeSlide=$.proxy(_.changeSlide,_),_.clickHandler=$.proxy(_.clickHandler,_),_.selectHandler=$.proxy(_.selectHandler,_),_.setPosition=$.proxy(_.setPosition,_),_.swipeHandler=$.proxy(_.swipeHandler,_),_.dragHandler=$.proxy(_.dragHandler,_),_.keyHandler=$.proxy(_.keyHandler,_),_.instanceUid=instanceUid++,_.htmlExpr=/^(?:\s*(<[\w\W]+>)[^>]*)$/,_.registerBreakpoints(),_.init(!0)}).prototype.activateADA=function(){this.$slideTrack.find(".slick-active").attr({"aria-hidden":"false"}).find("a, input, button, select").attr({tabindex:"0"})},Slick.prototype.addSlide=Slick.prototype.slickAdd=function(markup,index,addBefore){var _=this;if("boolean"==typeof index)addBefore=index,index=null;else if(index<0||index>=_.slideCount)return!1;if(_.unload(),"number"==typeof index)if(0===index&&0===_.$slides.length)$(markup).appendTo(_.$slideTrack);else if(addBefore)$(markup).insertBefore(_.$slides.eq(index));else $(markup).insertAfter(_.$slides.eq(index));else if(!0===addBefore)$(markup).prependTo(_.$slideTrack);else $(markup).appendTo(_.$slideTrack);_.$slides=_.$slideTrack.children(this.options.slide),_.$slideTrack.children(this.options.slide).detach(),_.$slideTrack.append(_.$slides),_.$slides.each(function(index,element){$(element).attr("data-slick-index",index)}),_.$slidesCache=_.$slides,_.reinit()},Slick.prototype.animateHeight=function(){var _=this;if(1===_.options.slidesToShow&&!0===_.options.adaptiveHeight&&!1===_.options.vertical){var targetHeight=_.$slides.eq(_.currentSlide).outerHeight(!0);_.$list.animate({height:targetHeight},_.options.speed)}},Slick.prototype.animateSlide=function(targetLeft,callback){var animProps={},_=this;if(_.animateHeight(),!0===_.options.rtl&&!1===_.options.vertical)targetLeft=-targetLeft;if(!1===_.transformsEnabled)if(!1===_.options.vertical)_.$slideTrack.animate({left:targetLeft},_.options.speed,_.options.easing,callback);else _.$slideTrack.animate({top:targetLeft},_.options.speed,_.options.easing,callback);else if(!1===_.cssTransitions){if(!0===_.options.rtl)_.currentLeft=-_.currentLeft;$({animStart:_.currentLeft}).animate({animStart:targetLeft},{duration:_.options.speed,easing:_.options.easing,step:function(now){if(now=Math.ceil(now),!1===_.options.vertical)animProps[_.animType]="translate("+now+"px, 0px)",_.$slideTrack.css(animProps);else animProps[_.animType]="translate(0px,"+now+"px)",_.$slideTrack.css(animProps)},complete:function(){if(callback)callback.call()}})}else{if(_.applyTransition(),targetLeft=Math.ceil(targetLeft),!1===_.options.vertical)animProps[_.animType]="translate3d("+targetLeft+"px, 0px, 0px)";else animProps[_.animType]="translate3d(0px,"+targetLeft+"px, 0px)";if(_.$slideTrack.css(animProps),callback)setTimeout(function(){_.disableTransition(),callback.call()},_.options.speed)}},Slick.prototype.getNavTarget=function(){var asNavFor=this.options.asNavFor;if(asNavFor&&null!==asNavFor)asNavFor=$(asNavFor).not(this.$slider);return asNavFor},Slick.prototype.asNavFor=function(index){var asNavFor=this.getNavTarget();if(null!==asNavFor&&"object"==typeof asNavFor)asNavFor.each(function(){var target=$(this).slick("getSlick");if(!target.unslicked)target.slideHandler(index,!0)})},Slick.prototype.applyTransition=function(slide){var _=this,transition={};if(!1===_.options.fade)transition[_.transitionType]=_.transformType+" "+_.options.speed+"ms "+_.options.cssEase;else transition[_.transitionType]="opacity "+_.options.speed+"ms "+_.options.cssEase;if(!1===_.options.fade)_.$slideTrack.css(transition);else _.$slides.eq(slide).css(transition)},Slick.prototype.autoPlay=function(){var _=this;if(_.autoPlayClear(),_.slideCount>_.options.slidesToShow)_.autoPlayTimer=setInterval(_.autoPlayIterator,_.options.autoplaySpeed)},Slick.prototype.autoPlayClear=function(){if(this.autoPlayTimer)clearInterval(this.autoPlayTimer)},Slick.prototype.autoPlayIterator=function(){var _=this,slideTo=_.currentSlide+_.options.slidesToScroll;if(!_.paused&&!_.interrupted&&!_.focussed){if(!1===_.options.infinite)if(1===_.direction&&_.currentSlide+1===_.slideCount-1)_.direction=0;else if(0===_.direction)if(slideTo=_.currentSlide-_.options.slidesToScroll,_.currentSlide-1==0)_.direction=1;_.slideHandler(slideTo)}},Slick.prototype.buildArrows=function(){var _=this;if(!0===_.options.arrows)if(_.$prevArrow=$(_.options.prevArrow).addClass("slick-arrow"),_.$nextArrow=$(_.options.nextArrow).addClass("slick-arrow"),_.slideCount>_.options.slidesToShow){if(_.$prevArrow.removeClass("slick-hidden").removeAttr("aria-hidden tabindex"),_.$nextArrow.removeClass("slick-hidden").removeAttr("aria-hidden tabindex"),_.htmlExpr.test(_.options.prevArrow))_.$prevArrow.prependTo(_.options.appendArrows);if(_.htmlExpr.test(_.options.nextArrow))_.$nextArrow.appendTo(_.options.appendArrows);if(!0!==_.options.infinite)_.$prevArrow.addClass("slick-disabled").attr("aria-disabled","true")}else _.$prevArrow.add(_.$nextArrow).addClass("slick-hidden").attr({"aria-disabled":"true",tabindex:"-1"})},Slick.prototype.buildDots=function(){var i,dot,_=this;if(!0===_.options.dots&&_.slideCount>_.options.slidesToShow){for(_.$slider.addClass("slick-dotted"),dot=$("<ul />").addClass(_.options.dotsClass),i=0;i<=_.getDotCount();i+=1)dot.append($("<li />").append(_.options.customPaging.call(this,_,i)));_.$dots=dot.appendTo(_.options.appendDots),_.$dots.find("li").first().addClass("slick-active")}},Slick.prototype.buildOut=function(){var _=this;if(_.$slides=_.$slider.children(_.options.slide+":not(.slick-cloned)").addClass("slick-slide"),_.slideCount=_.$slides.length,_.$slides.each(function(index,element){$(element).attr("data-slick-index",index).data("originalStyling",$(element).attr("style")||"")}),_.$slider.addClass("slick-slider"),_.$slideTrack=0===_.slideCount?$('<div class="slick-track"/>').appendTo(_.$slider):_.$slides.wrapAll('<div class="slick-track"/>').parent(),_.$list=_.$slideTrack.wrap('<div class="slick-list"/>').parent(),_.$slideTrack.css("opacity",0),!0===_.options.centerMode||!0===_.options.swipeToSlide)_.options.slidesToScroll=1;if($("img[data-lazy]",_.$slider).not("[src]").addClass("slick-loading"),_.setupInfinite(),_.buildArrows(),_.buildDots(),_.updateDots(),_.setSlideClasses("number"==typeof _.currentSlide?_.currentSlide:0),!0===_.options.draggable)_.$list.addClass("draggable")},Slick.prototype.buildRows=function(){var a,b,c,newSlides,numOfSlides,originalSlides,slidesPerSection,_=this;if(newSlides=document.createDocumentFragment(),originalSlides=_.$slider.children(),0<_.options.rows){for(slidesPerSection=_.options.slidesPerRow*_.options.rows,numOfSlides=Math.ceil(originalSlides.length/slidesPerSection),a=0;a<numOfSlides;a++){var slide=document.createElement("div");for(b=0;b<_.options.rows;b++){var row=document.createElement("div");for(c=0;c<_.options.slidesPerRow;c++){var target=a*slidesPerSection+(b*_.options.slidesPerRow+c);if(originalSlides.get(target))row.appendChild(originalSlides.get(target))}slide.appendChild(row)}newSlides.appendChild(slide)}_.$slider.empty().append(newSlides),_.$slider.children().children().children().css({width:100/_.options.slidesPerRow+"%",display:"inline-block"})}},Slick.prototype.checkResponsive=function(initial,forceUpdate){var breakpoint,targetBreakpoint,respondToWidth,_=this,triggerBreakpoint=!1,sliderWidth=_.$slider.width(),windowWidth=window.innerWidth||$(window).width();if("window"===_.respondTo)respondToWidth=windowWidth;else if("slider"===_.respondTo)respondToWidth=sliderWidth;else if("min"===_.respondTo)respondToWidth=Math.min(windowWidth,sliderWidth);if(_.options.responsive&&_.options.responsive.length&&null!==_.options.responsive){for(breakpoint in targetBreakpoint=null,_.breakpoints)if(_.breakpoints.hasOwnProperty(breakpoint))if(!1===_.originalSettings.mobileFirst){if(respondToWidth<_.breakpoints[breakpoint])targetBreakpoint=_.breakpoints[breakpoint]}else if(respondToWidth>_.breakpoints[breakpoint])targetBreakpoint=_.breakpoints[breakpoint];if(null!==targetBreakpoint)if(null!==_.activeBreakpoint){if(targetBreakpoint!==_.activeBreakpoint||forceUpdate){if(_.activeBreakpoint=targetBreakpoint,"unslick"===_.breakpointSettings[targetBreakpoint])_.unslick(targetBreakpoint);else{if(_.options=$.extend({},_.originalSettings,_.breakpointSettings[targetBreakpoint]),!0===initial)_.currentSlide=_.options.initialSlide;_.refresh(initial)}triggerBreakpoint=targetBreakpoint}}else{if(_.activeBreakpoint=targetBreakpoint,"unslick"===_.breakpointSettings[targetBreakpoint])_.unslick(targetBreakpoint);else{if(_.options=$.extend({},_.originalSettings,_.breakpointSettings[targetBreakpoint]),!0===initial)_.currentSlide=_.options.initialSlide;_.refresh(initial)}triggerBreakpoint=targetBreakpoint}else if(null!==_.activeBreakpoint){if(_.activeBreakpoint=null,_.options=_.originalSettings,!0===initial)_.currentSlide=_.options.initialSlide;_.refresh(initial),triggerBreakpoint=targetBreakpoint}if(!initial&&!1!==triggerBreakpoint)_.$slider.trigger("breakpoint",[_,triggerBreakpoint])}},Slick.prototype.changeSlide=function(event,dontAnimate){var indexOffset,slideOffset,_=this,$target=$(event.currentTarget);if($target.is("a"))event.preventDefault();if(!$target.is("li"))$target=$target.closest("li");switch(indexOffset=_.slideCount%_.options.slidesToScroll!=0?0:(_.slideCount-_.currentSlide)%_.options.slidesToScroll,event.data.message){case"previous":if(slideOffset=0===indexOffset?_.options.slidesToScroll:_.options.slidesToShow-indexOffset,_.slideCount>_.options.slidesToShow)_.slideHandler(_.currentSlide-slideOffset,!1,dontAnimate);break;case"next":if(slideOffset=0===indexOffset?_.options.slidesToScroll:indexOffset,_.slideCount>_.options.slidesToShow)_.slideHandler(_.currentSlide+slideOffset,!1,dontAnimate);break;case"index":var index=0===event.data.index?0:event.data.index||$target.index()*_.options.slidesToScroll;_.slideHandler(_.checkNavigable(index),!1,dontAnimate),$target.children().trigger("focus");break;default:return}},Slick.prototype.checkNavigable=function(index){var navigables,prevNavigable;if(prevNavigable=0,index>(navigables=this.getNavigableIndexes())[navigables.length-1])index=navigables[navigables.length-1];else for(var n in navigables){if(index<navigables[n]){index=prevNavigable;break}prevNavigable=navigables[n]}return index},Slick.prototype.cleanUpEvents=function(){var _=this;if(_.options.dots&&null!==_.$dots)if($("li",_.$dots).off("click.slick",_.changeSlide).off("mouseenter.slick",$.proxy(_.interrupt,_,!0)).off("mouseleave.slick",$.proxy(_.interrupt,_,!1)),!0===_.options.accessibility)_.$dots.off("keydown.slick",_.keyHandler);if(_.$slider.off("focus.slick blur.slick"),!0===_.options.arrows&&_.slideCount>_.options.slidesToShow)if(_.$prevArrow&&_.$prevArrow.off("click.slick",_.changeSlide),_.$nextArrow&&_.$nextArrow.off("click.slick",_.changeSlide),!0===_.options.accessibility)_.$prevArrow&&_.$prevArrow.off("keydown.slick",_.keyHandler),_.$nextArrow&&_.$nextArrow.off("keydown.slick",_.keyHandler);if(_.$list.off("touchstart.slick mousedown.slick",_.swipeHandler),_.$list.off("touchmove.slick mousemove.slick",_.swipeHandler),_.$list.off("touchend.slick mouseup.slick",_.swipeHandler),_.$list.off("touchcancel.slick mouseleave.slick",_.swipeHandler),_.$list.off("click.slick",_.clickHandler),$(document).off(_.visibilityChange,_.visibility),_.cleanUpSlideEvents(),!0===_.options.accessibility)_.$list.off("keydown.slick",_.keyHandler);if(!0===_.options.focusOnSelect)$(_.$slideTrack).children().off("click.slick",_.selectHandler);$(window).off("orientationchange.slick.slick-"+_.instanceUid,_.orientationChange),$(window).off("resize.slick.slick-"+_.instanceUid,_.resize),$("[draggable!=true]",_.$slideTrack).off("dragstart",_.preventDefault),$(window).off("load.slick.slick-"+_.instanceUid,_.setPosition)},Slick.prototype.cleanUpSlideEvents=function(){var _=this;_.$list.off("mouseenter.slick",$.proxy(_.interrupt,_,!0)),_.$list.off("mouseleave.slick",$.proxy(_.interrupt,_,!1))},Slick.prototype.cleanUpRows=function(){var originalSlides,_=this;if(0<_.options.rows)(originalSlides=_.$slides.children().children()).removeAttr("style"),_.$slider.empty().append(originalSlides)},Slick.prototype.clickHandler=function(event){if(!1===this.shouldClick)event.stopImmediatePropagation(),event.stopPropagation(),event.preventDefault()},Slick.prototype.destroy=function(refresh){var _=this;if(_.autoPlayClear(),_.touchObject={},_.cleanUpEvents(),$(".slick-cloned",_.$slider).detach(),_.$dots)_.$dots.remove();if(_.$prevArrow&&_.$prevArrow.length)if(_.$prevArrow.removeClass("slick-disabled slick-arrow slick-hidden").removeAttr("aria-hidden aria-disabled tabindex").css("display",""),_.htmlExpr.test(_.options.prevArrow))_.$prevArrow.remove();if(_.$nextArrow&&_.$nextArrow.length)if(_.$nextArrow.removeClass("slick-disabled slick-arrow slick-hidden").removeAttr("aria-hidden aria-disabled tabindex").css("display",""),_.htmlExpr.test(_.options.nextArrow))_.$nextArrow.remove();if(_.$slides)_.$slides.removeClass("slick-slide slick-active slick-center slick-visible slick-current").removeAttr("aria-hidden").removeAttr("data-slick-index").each(function(){$(this).attr("style",$(this).data("originalStyling"))}),_.$slideTrack.children(this.options.slide).detach(),_.$slideTrack.detach(),_.$list.detach(),_.$slider.append(_.$slides);if(_.cleanUpRows(),_.$slider.removeClass("slick-slider"),_.$slider.removeClass("slick-initialized"),_.$slider.removeClass("slick-dotted"),_.unslicked=!0,!refresh)_.$slider.trigger("destroy",[_])},Slick.prototype.disableTransition=function(slide){var _=this,transition={};if(transition[_.transitionType]="",!1===_.options.fade)_.$slideTrack.css(transition);else _.$slides.eq(slide).css(transition)},Slick.prototype.fadeSlide=function(slideIndex,callback){var _=this;if(!1===_.cssTransitions)_.$slides.eq(slideIndex).css({zIndex:_.options.zIndex}),_.$slides.eq(slideIndex).animate({opacity:1},_.options.speed,_.options.easing,callback);else if(_.applyTransition(slideIndex),_.$slides.eq(slideIndex).css({opacity:1,zIndex:_.options.zIndex}),callback)setTimeout(function(){_.disableTransition(slideIndex),callback.call()},_.options.speed)},Slick.prototype.fadeSlideOut=function(slideIndex){var _=this;if(!1===_.cssTransitions)_.$slides.eq(slideIndex).animate({opacity:0,zIndex:_.options.zIndex-2},_.options.speed,_.options.easing);else _.applyTransition(slideIndex),_.$slides.eq(slideIndex).css({opacity:0,zIndex:_.options.zIndex-2})},Slick.prototype.filterSlides=Slick.prototype.slickFilter=function(filter){var _=this;if(null!==filter)_.$slidesCache=_.$slides,_.unload(),_.$slideTrack.children(this.options.slide).detach(),_.$slidesCache.filter(filter).appendTo(_.$slideTrack),_.reinit()},Slick.prototype.focusHandler=function(){var _=this;_.$slider.off("focus.slick blur.slick").on("focus.slick","*",function(event){var $sf=$(this);setTimeout(function(){if(_.options.pauseOnFocus)if($sf.is(":focus"))_.focussed=!0,_.autoPlay()},0)}).on("blur.slick","*",function(event){$(this);if(_.options.pauseOnFocus)_.focussed=!1,_.autoPlay()})},Slick.prototype.getCurrent=Slick.prototype.slickCurrentSlide=function(){return this.currentSlide},Slick.prototype.getDotCount=function(){var _=this,breakPoint=0,counter=0,pagerQty=0;if(!0===_.options.infinite)if(_.slideCount<=_.options.slidesToShow)++pagerQty;else for(;breakPoint<_.slideCount;)++pagerQty,breakPoint=counter+_.options.slidesToScroll,counter+=_.options.slidesToScroll<=_.options.slidesToShow?_.options.slidesToScroll:_.options.slidesToShow;else if(!0===_.options.centerMode)pagerQty=_.slideCount;else if(!_.options.asNavFor)pagerQty=1+Math.ceil((_.slideCount-_.options.slidesToShow)/_.options.slidesToScroll);else for(;breakPoint<_.slideCount;)++pagerQty,breakPoint=counter+_.options.slidesToScroll,counter+=_.options.slidesToScroll<=_.options.slidesToShow?_.options.slidesToScroll:_.options.slidesToShow;return pagerQty-1},Slick.prototype.getLeft=function(slideIndex){var targetLeft,verticalHeight,targetSlide,coef,_=this,verticalOffset=0;if(_.slideOffset=0,verticalHeight=_.$slides.first().outerHeight(!0),!0===_.options.infinite){if(_.slideCount>_.options.slidesToShow){if(_.slideOffset=_.slideWidth*_.options.slidesToShow*-1,coef=-1,!0===_.options.vertical&&!0===_.options.centerMode)if(2===_.options.slidesToShow)coef=-1.5;else if(1===_.options.slidesToShow)coef=-2;verticalOffset=verticalHeight*_.options.slidesToShow*coef}if(_.slideCount%_.options.slidesToScroll!=0)if(slideIndex+_.options.slidesToScroll>_.slideCount&&_.slideCount>_.options.slidesToShow)if(slideIndex>_.slideCount)_.slideOffset=(_.options.slidesToShow-(slideIndex-_.slideCount))*_.slideWidth*-1,verticalOffset=(_.options.slidesToShow-(slideIndex-_.slideCount))*verticalHeight*-1;else _.slideOffset=_.slideCount%_.options.slidesToScroll*_.slideWidth*-1,verticalOffset=_.slideCount%_.options.slidesToScroll*verticalHeight*-1}else if(slideIndex+_.options.slidesToShow>_.slideCount)_.slideOffset=(slideIndex+_.options.slidesToShow-_.slideCount)*_.slideWidth,verticalOffset=(slideIndex+_.options.slidesToShow-_.slideCount)*verticalHeight;if(_.slideCount<=_.options.slidesToShow)verticalOffset=_.slideOffset=0;if(!0===_.options.centerMode&&_.slideCount<=_.options.slidesToShow)_.slideOffset=_.slideWidth*Math.floor(_.options.slidesToShow)/2-_.slideWidth*_.slideCount/2;else if(!0===_.options.centerMode&&!0===_.options.infinite)_.slideOffset+=_.slideWidth*Math.floor(_.options.slidesToShow/2)-_.slideWidth;else if(!0===_.options.centerMode)_.slideOffset=0,_.slideOffset+=_.slideWidth*Math.floor(_.options.slidesToShow/2);if(!1===_.options.vertical)targetLeft=slideIndex*_.slideWidth*-1+_.slideOffset;else targetLeft=slideIndex*verticalHeight*-1+verticalOffset;if(!0===_.options.variableWidth){if(_.slideCount<=_.options.slidesToShow||!1===_.options.infinite)targetSlide=_.$slideTrack.children(".slick-slide").eq(slideIndex);else targetSlide=_.$slideTrack.children(".slick-slide").eq(slideIndex+_.options.slidesToShow);if(!0===_.options.rtl)if(targetSlide[0])targetLeft=-1*(_.$slideTrack.width()-targetSlide[0].offsetLeft-targetSlide.width());else targetLeft=0;else targetLeft=targetSlide[0]?-1*targetSlide[0].offsetLeft:0;if(!0===_.options.centerMode){if(_.slideCount<=_.options.slidesToShow||!1===_.options.infinite)targetSlide=_.$slideTrack.children(".slick-slide").eq(slideIndex);else targetSlide=_.$slideTrack.children(".slick-slide").eq(slideIndex+_.options.slidesToShow+1);if(!0===_.options.rtl)if(targetSlide[0])targetLeft=-1*(_.$slideTrack.width()-targetSlide[0].offsetLeft-targetSlide.width());else targetLeft=0;else targetLeft=targetSlide[0]?-1*targetSlide[0].offsetLeft:0;targetLeft+=(_.$list.width()-targetSlide.outerWidth())/2}}return targetLeft},Slick.prototype.getOption=Slick.prototype.slickGetOption=function(option){return this.options[option]},Slick.prototype.getNavigableIndexes=function(){var max,_=this,breakPoint=0,counter=0,indexes=[];if(!1===_.options.infinite)max=_.slideCount;else breakPoint=-1*_.options.slidesToScroll,counter=-1*_.options.slidesToScroll,max=2*_.slideCount;for(;breakPoint<max;)indexes.push(breakPoint),breakPoint=counter+_.options.slidesToScroll,counter+=_.options.slidesToScroll<=_.options.slidesToShow?_.options.slidesToScroll:_.options.slidesToShow;return indexes},Slick.prototype.getSlick=function(){return this},Slick.prototype.getSlideCount=function(){var swipedSlide,swipeTarget,centerOffset,_=this;if(centerOffset=!0===_.options.centerMode?Math.floor(_.$list.width()/2):0,swipeTarget=-1*_.swipeLeft+centerOffset,!0===_.options.swipeToSlide)return _.$slideTrack.find(".slick-slide").each(function(index,slide){var slideOuterWidth,slideOffset;if(slideOuterWidth=$(slide).outerWidth(),slideOffset=slide.offsetLeft,!0!==_.options.centerMode)slideOffset+=slideOuterWidth/2;if(swipeTarget<slideOffset+slideOuterWidth)return swipedSlide=slide,!1}),Math.abs($(swipedSlide).attr("data-slick-index")-_.currentSlide)||1;else return _.options.slidesToScroll},Slick.prototype.goTo=Slick.prototype.slickGoTo=function(slide,dontAnimate){this.changeSlide({data:{message:"index",index:parseInt(slide)}},dontAnimate)},Slick.prototype.init=function(creation){var _=this;if(!$(_.$slider).hasClass("slick-initialized"))$(_.$slider).addClass("slick-initialized"),_.buildRows(),_.buildOut(),_.setProps(),_.startLoad(),_.loadSlider(),_.initializeEvents(),_.updateArrows(),_.updateDots(),_.checkResponsive(!0),_.focusHandler();if(creation)_.$slider.trigger("init",[_]);if(!0===_.options.accessibility)_.initADA();if(_.options.autoplay)_.paused=!1,_.autoPlay()},Slick.prototype.initADA=function(){var _=this,numDotGroups=Math.ceil(_.slideCount/_.options.slidesToShow),tabControlIndexes=_.getNavigableIndexes().filter(function(val){return 0<=val&&val<_.slideCount});if(_.$slides.add(_.$slideTrack.find(".slick-cloned")).attr({"aria-hidden":"true",tabindex:"-1"}).find("a, input, button, select").attr({tabindex:"-1"}),null!==_.$dots)_.$slides.not(_.$slideTrack.find(".slick-cloned")).each(function(i){var slideControlIndex=tabControlIndexes.indexOf(i);if($(this).attr({role:"tabpanel",id:"slick-slide"+_.instanceUid+i,tabindex:-1}),-1!==slideControlIndex){var ariaButtonControl="slick-slide-control"+_.instanceUid+slideControlIndex;if($("#"+ariaButtonControl).length)$(this).attr({"aria-describedby":ariaButtonControl})}}),_.$dots.attr("role","tablist").find("li").each(function(i){var mappedSlideIndex=tabControlIndexes[i];$(this).attr({role:"presentation"}),$(this).find("button").first().attr({role:"tab",id:"slick-slide-control"+_.instanceUid+i,"aria-controls":"slick-slide"+_.instanceUid+mappedSlideIndex,"aria-label":i+1+" of "+numDotGroups,"aria-selected":null,tabindex:"-1"})}).eq(_.currentSlide).find("button").attr({"aria-selected":"true",tabindex:"0"}).end();for(var i=_.currentSlide,max=i+_.options.slidesToShow;i<max;i++)if(_.options.focusOnChange)_.$slides.eq(i).attr({tabindex:"0"});else _.$slides.eq(i).removeAttr("tabindex");_.activateADA()},Slick.prototype.initArrowEvents=function(){var _=this;if(!0===_.options.arrows&&_.slideCount>_.options.slidesToShow)if(_.$prevArrow.off("click.slick").on("click.slick",{message:"previous"},_.changeSlide),_.$nextArrow.off("click.slick").on("click.slick",{message:"next"},_.changeSlide),!0===_.options.accessibility)_.$prevArrow.on("keydown.slick",_.keyHandler),_.$nextArrow.on("keydown.slick",_.keyHandler)},Slick.prototype.initDotEvents=function(){var _=this;if(!0===_.options.dots&&_.slideCount>_.options.slidesToShow)if($("li",_.$dots).on("click.slick",{message:"index"},_.changeSlide),!0===_.options.accessibility)_.$dots.on("keydown.slick",_.keyHandler);if(!0===_.options.dots&&!0===_.options.pauseOnDotsHover&&_.slideCount>_.options.slidesToShow)$("li",_.$dots).on("mouseenter.slick",$.proxy(_.interrupt,_,!0)).on("mouseleave.slick",$.proxy(_.interrupt,_,!1))},Slick.prototype.initSlideEvents=function(){var _=this;if(_.options.pauseOnHover)_.$list.on("mouseenter.slick",$.proxy(_.interrupt,_,!0)),_.$list.on("mouseleave.slick",$.proxy(_.interrupt,_,!1))},Slick.prototype.initializeEvents=function(){var _=this;if(_.initArrowEvents(),_.initDotEvents(),_.initSlideEvents(),_.$list.on("touchstart.slick mousedown.slick",{action:"start"},_.swipeHandler),_.$list.on("touchmove.slick mousemove.slick",{action:"move"},_.swipeHandler),_.$list.on("touchend.slick mouseup.slick",{action:"end"},_.swipeHandler),_.$list.on("touchcancel.slick mouseleave.slick",{action:"end"},_.swipeHandler),_.$list.on("click.slick",_.clickHandler),$(document).on(_.visibilityChange,$.proxy(_.visibility,_)),!0===_.options.accessibility)_.$list.on("keydown.slick",_.keyHandler);if(!0===_.options.focusOnSelect)$(_.$slideTrack).children().on("click.slick",_.selectHandler);$(window).on("orientationchange.slick.slick-"+_.instanceUid,$.proxy(_.orientationChange,_)),$(window).on("resize.slick.slick-"+_.instanceUid,$.proxy(_.resize,_)),$("[draggable!=true]",_.$slideTrack).on("dragstart",_.preventDefault),$(window).on("load.slick.slick-"+_.instanceUid,_.setPosition),$(_.setPosition)},Slick.prototype.initUI=function(){var _=this;if(!0===_.options.arrows&&_.slideCount>_.options.slidesToShow)_.$prevArrow.show(),_.$nextArrow.show();if(!0===_.options.dots&&_.slideCount>_.options.slidesToShow)_.$dots.show()},Slick.prototype.keyHandler=function(event){var _=this;if(!event.target.tagName.match("TEXTAREA|INPUT|SELECT"))if(37===event.keyCode&&!0===_.options.accessibility)_.changeSlide({data:{message:!0===_.options.rtl?"next":"previous"}});else if(39===event.keyCode&&!0===_.options.accessibility)_.changeSlide({data:{message:!0===_.options.rtl?"previous":"next"}})},Slick.prototype.lazyLoad=function(){var loadRange,rangeStart,rangeEnd,_=this;function loadImages(imagesScope){$("img[data-lazy]",imagesScope).each(function(){var image=$(this),imageSource=$(this).attr("data-lazy"),imageSrcSet=$(this).attr("data-srcset"),imageSizes=$(this).attr("data-sizes")||_.$slider.attr("data-sizes"),imageToLoad=document.createElement("img");imageToLoad.onload=function(){image.animate({opacity:0},100,function(){if(imageSrcSet)if(image.attr("srcset",imageSrcSet),imageSizes)image.attr("sizes",imageSizes);image.attr("src",imageSource).animate({opacity:1},200,function(){image.removeAttr("data-lazy data-srcset data-sizes").removeClass("slick-loading")}),_.$slider.trigger("lazyLoaded",[_,image,imageSource])})},imageToLoad.onerror=function(){image.removeAttr("data-lazy").removeClass("slick-loading").addClass("slick-lazyload-error"),_.$slider.trigger("lazyLoadError",[_,image,imageSource])},imageToLoad.src=imageSource})}if(!0===_.options.centerMode)if(!0===_.options.infinite)rangeEnd=(rangeStart=_.currentSlide+(_.options.slidesToShow/2+1))+_.options.slidesToShow+2;else rangeStart=Math.max(0,_.currentSlide-(_.options.slidesToShow/2+1)),rangeEnd=_.options.slidesToShow/2+1+2+_.currentSlide;else if(rangeStart=_.options.infinite?_.options.slidesToShow+_.currentSlide:_.currentSlide,rangeEnd=Math.ceil(rangeStart+_.options.slidesToShow),!0===_.options.fade){if(0<rangeStart)rangeStart--;if(rangeEnd<=_.slideCount)rangeEnd++}if(loadRange=_.$slider.find(".slick-slide").slice(rangeStart,rangeEnd),"anticipated"===_.options.lazyLoad)for(var prevSlide=rangeStart-1,nextSlide=rangeEnd,$slides=_.$slider.find(".slick-slide"),i=0;i<_.options.slidesToScroll;i++){if(prevSlide<0)prevSlide=_.slideCount-1;loadRange=(loadRange=loadRange.add($slides.eq(prevSlide))).add($slides.eq(nextSlide)),prevSlide--,nextSlide++}if(loadImages(loadRange),_.slideCount<=_.options.slidesToShow)loadImages(_.$slider.find(".slick-slide"));else if(_.currentSlide>=_.slideCount-_.options.slidesToShow)loadImages(_.$slider.find(".slick-cloned").slice(0,_.options.slidesToShow));else if(0===_.currentSlide)loadImages(_.$slider.find(".slick-cloned").slice(-1*_.options.slidesToShow))},Slick.prototype.loadSlider=function(){var _=this;if(_.setPosition(),_.$slideTrack.css({opacity:1}),_.$slider.removeClass("slick-loading"),_.initUI(),"progressive"===_.options.lazyLoad)_.progressiveLazyLoad()},Slick.prototype.next=Slick.prototype.slickNext=function(){this.changeSlide({data:{message:"next"}})},Slick.prototype.orientationChange=function(){this.checkResponsive(),this.setPosition()},Slick.prototype.pause=Slick.prototype.slickPause=function(){this.autoPlayClear(),this.paused=!0},Slick.prototype.play=Slick.prototype.slickPlay=function(){var _=this;_.autoPlay(),_.options.autoplay=!0,_.paused=!1,_.focussed=!1,_.interrupted=!1},Slick.prototype.postSlide=function(index){var _=this;if(!_.unslicked){if(_.$slider.trigger("afterChange",[_,index]),_.animating=!1,_.slideCount>_.options.slidesToShow)_.setPosition();if(_.swipeLeft=null,_.options.autoplay)_.autoPlay();if(!0===_.options.accessibility)if(_.initADA(),_.options.focusOnChange){$(_.$slides.get(_.currentSlide)).attr("tabindex",0).focus()}}},Slick.prototype.prev=Slick.prototype.slickPrev=function(){this.changeSlide({data:{message:"previous"}})},Slick.prototype.preventDefault=function(event){event.preventDefault()},Slick.prototype.progressiveLazyLoad=function(tryCount){tryCount=tryCount||1;var image,imageSource,imageSrcSet,imageSizes,imageToLoad,_=this,$imgsToLoad=$("img[data-lazy]",_.$slider);if($imgsToLoad.length)image=$imgsToLoad.first(),imageSource=image.attr("data-lazy"),imageSrcSet=image.attr("data-srcset"),imageSizes=image.attr("data-sizes")||_.$slider.attr("data-sizes"),(imageToLoad=document.createElement("img")).onload=function(){if(imageSrcSet)if(image.attr("srcset",imageSrcSet),imageSizes)image.attr("sizes",imageSizes);if(image.attr("src",imageSource).removeAttr("data-lazy data-srcset data-sizes").removeClass("slick-loading"),!0===_.options.adaptiveHeight)_.setPosition();_.$slider.trigger("lazyLoaded",[_,image,imageSource]),_.progressiveLazyLoad()},imageToLoad.onerror=function(){if(tryCount<3)setTimeout(function(){_.progressiveLazyLoad(tryCount+1)},500);else image.removeAttr("data-lazy").removeClass("slick-loading").addClass("slick-lazyload-error"),_.$slider.trigger("lazyLoadError",[_,image,imageSource]),_.progressiveLazyLoad()},imageToLoad.src=imageSource;else _.$slider.trigger("allImagesLoaded",[_])},Slick.prototype.refresh=function(initializing){var currentSlide,lastVisibleIndex,_=this;if(lastVisibleIndex=_.slideCount-_.options.slidesToShow,!_.options.infinite&&_.currentSlide>lastVisibleIndex)_.currentSlide=lastVisibleIndex;if(_.slideCount<=_.options.slidesToShow)_.currentSlide=0;if(currentSlide=_.currentSlide,_.destroy(!0),$.extend(_,_.initials,{currentSlide:currentSlide}),_.init(),!initializing)_.changeSlide({data:{message:"index",index:currentSlide}},!1)},Slick.prototype.registerBreakpoints=function(){var breakpoint,currentBreakpoint,l,_=this,responsiveSettings=_.options.responsive||null;if("array"===$.type(responsiveSettings)&&responsiveSettings.length){for(breakpoint in _.respondTo=_.options.respondTo||"window",responsiveSettings)if(l=_.breakpoints.length-1,responsiveSettings.hasOwnProperty(breakpoint)){for(currentBreakpoint=responsiveSettings[breakpoint].breakpoint;0<=l;){if(_.breakpoints[l]&&_.breakpoints[l]===currentBreakpoint)_.breakpoints.splice(l,1);l--}_.breakpoints.push(currentBreakpoint),_.breakpointSettings[currentBreakpoint]=responsiveSettings[breakpoint].settings}_.breakpoints.sort(function(a,b){return _.options.mobileFirst?a-b:b-a})}},Slick.prototype.reinit=function(){var _=this;if(_.$slides=_.$slideTrack.children(_.options.slide).addClass("slick-slide"),_.slideCount=_.$slides.length,_.currentSlide>=_.slideCount&&0!==_.currentSlide)_.currentSlide=_.currentSlide-_.options.slidesToScroll;if(_.slideCount<=_.options.slidesToShow)_.currentSlide=0;if(_.registerBreakpoints(),_.setProps(),_.setupInfinite(),_.buildArrows(),_.updateArrows(),_.initArrowEvents(),_.buildDots(),_.updateDots(),_.initDotEvents(),_.cleanUpSlideEvents(),_.initSlideEvents(),_.checkResponsive(!1,!0),!0===_.options.focusOnSelect)$(_.$slideTrack).children().on("click.slick",_.selectHandler);_.setSlideClasses("number"==typeof _.currentSlide?_.currentSlide:0),_.setPosition(),_.focusHandler(),_.paused=!_.options.autoplay,_.autoPlay(),_.$slider.trigger("reInit",[_])},Slick.prototype.resize=function(){var _=this;if($(window).width()!==_.windowWidth)clearTimeout(_.windowDelay),_.windowDelay=window.setTimeout(function(){if(_.windowWidth=$(window).width(),_.checkResponsive(),!_.unslicked)_.setPosition()},50)},Slick.prototype.removeSlide=Slick.prototype.slickRemove=function(index,removeBefore,removeAll){var _=this;if("boolean"==typeof index)index=!0===(removeBefore=index)?0:_.slideCount-1;else index=!0===removeBefore?--index:index;if(_.slideCount<1||index<0||index>_.slideCount-1)return!1;if(_.unload(),!0===removeAll)_.$slideTrack.children().remove();else _.$slideTrack.children(this.options.slide).eq(index).remove();_.$slides=_.$slideTrack.children(this.options.slide),_.$slideTrack.children(this.options.slide).detach(),_.$slideTrack.append(_.$slides),_.$slidesCache=_.$slides,_.reinit()},Slick.prototype.setCSS=function(position){var x,y,_=this,positionProps={};if(!0===_.options.rtl)position=-position;if(x="left"==_.positionProp?Math.ceil(position)+"px":"0px",y="top"==_.positionProp?Math.ceil(position)+"px":"0px",positionProps[_.positionProp]=position,!1===_.transformsEnabled)_.$slideTrack.css(positionProps);else if(!(positionProps={})===_.cssTransitions)positionProps[_.animType]="translate("+x+", "+y+")",_.$slideTrack.css(positionProps);else positionProps[_.animType]="translate3d("+x+", "+y+", 0px)",_.$slideTrack.css(positionProps)},Slick.prototype.setDimensions=function(){var _=this;if(!1===_.options.vertical){if(!0===_.options.centerMode)_.$list.css({padding:"0px "+_.options.centerPadding})}else if(_.$list.height(_.$slides.first().outerHeight(!0)*_.options.slidesToShow),!0===_.options.centerMode)_.$list.css({padding:_.options.centerPadding+" 0px"});if(_.listWidth=_.$list.width(),_.listHeight=_.$list.height(),!1===_.options.vertical&&!1===_.options.variableWidth)_.slideWidth=_.listWidth/_.options.slidesToShow,_.$slideTrack.width(Math.ceil(_.slideWidth*_.$slideTrack.children(".slick-slide").length));else if(!0===_.options.variableWidth)_.$slideTrack.width(5e3*_.slideCount);else _.slideWidth=Math.ceil(_.listWidth),_.$slideTrack.height(Math.ceil(_.$slides.first().outerHeight(!0)*_.$slideTrack.children(".slick-slide").length));var offset=_.$slides.first().outerWidth(!0)-_.$slides.first().width();if(!1===_.options.variableWidth)_.$slideTrack.children(".slick-slide").width(_.slideWidth-offset)},Slick.prototype.setFade=function(){var targetLeft,_=this;_.$slides.each(function(index,element){if(targetLeft=_.slideWidth*index*-1,!0===_.options.rtl)$(element).css({position:"relative",right:targetLeft,top:0,zIndex:_.options.zIndex-2,opacity:0});else $(element).css({position:"relative",left:targetLeft,top:0,zIndex:_.options.zIndex-2,opacity:0})}),_.$slides.eq(_.currentSlide).css({zIndex:_.options.zIndex-1,opacity:1})},Slick.prototype.setHeight=function(){var _=this;if(1===_.options.slidesToShow&&!0===_.options.adaptiveHeight&&!1===_.options.vertical){var targetHeight=_.$slides.eq(_.currentSlide).outerHeight(!0);_.$list.css("height",targetHeight)}},Slick.prototype.setOption=Slick.prototype.slickSetOption=function(){var l,item,option,value,type,_=this,refresh=!1;if("object"===$.type(arguments[0]))option=arguments[0],refresh=arguments[1],type="multiple";else if("string"===$.type(arguments[0]))if(option=arguments[0],value=arguments[1],refresh=arguments[2],"responsive"===arguments[0]&&"array"===$.type(arguments[1]))type="responsive";else if(void 0!==arguments[1])type="single";if("single"===type)_.options[option]=value;else if("multiple"===type)$.each(option,function(opt,val){_.options[opt]=val});else if("responsive"===type)for(item in value)if("array"!==$.type(_.options.responsive))_.options.responsive=[value[item]];else{for(l=_.options.responsive.length-1;0<=l;){if(_.options.responsive[l].breakpoint===value[item].breakpoint)_.options.responsive.splice(l,1);l--}_.options.responsive.push(value[item])}if(refresh)_.unload(),_.reinit()},Slick.prototype.setPosition=function(){var _=this;if(_.setDimensions(),_.setHeight(),!1===_.options.fade)_.setCSS(_.getLeft(_.currentSlide));else _.setFade();_.$slider.trigger("setPosition",[_])},Slick.prototype.setProps=function(){var _=this,bodyStyle=document.body.style;if(_.positionProp=!0===_.options.vertical?"top":"left","top"===_.positionProp)_.$slider.addClass("slick-vertical");else _.$slider.removeClass("slick-vertical");if(void 0!==bodyStyle.WebkitTransition||void 0!==bodyStyle.MozTransition||void 0!==bodyStyle.msTransition)if(!0===_.options.useCSS)_.cssTransitions=!0;if(_.options.fade)if("number"==typeof _.options.zIndex){if(_.options.zIndex<3)_.options.zIndex=3}else _.options.zIndex=_.defaults.zIndex;if(void 0!==bodyStyle.OTransform)if(_.animType="OTransform",_.transformType="-o-transform",_.transitionType="OTransition",void 0===bodyStyle.perspectiveProperty&&void 0===bodyStyle.webkitPerspective)_.animType=!1;if(void 0!==bodyStyle.MozTransform)if(_.animType="MozTransform",_.transformType="-moz-transform",_.transitionType="MozTransition",void 0===bodyStyle.perspectiveProperty&&void 0===bodyStyle.MozPerspective)_.animType=!1;if(void 0!==bodyStyle.webkitTransform)if(_.animType="webkitTransform",_.transformType="-webkit-transform",_.transitionType="webkitTransition",void 0===bodyStyle.perspectiveProperty&&void 0===bodyStyle.webkitPerspective)_.animType=!1;if(void 0!==bodyStyle.msTransform)if(_.animType="msTransform",_.transformType="-ms-transform",_.transitionType="msTransition",void 0===bodyStyle.msTransform)_.animType=!1;if(void 0!==bodyStyle.transform&&!1!==_.animType)_.animType="transform",_.transformType="transform",_.transitionType="transition";_.transformsEnabled=_.options.useTransform&&null!==_.animType&&!1!==_.animType},Slick.prototype.setSlideClasses=function(index){var centerOffset,allSlides,indexOffset,remainder,_=this;if(allSlides=_.$slider.find(".slick-slide").removeClass("slick-active slick-center slick-current").attr("aria-hidden","true"),_.$slides.eq(index).addClass("slick-current"),!0===_.options.centerMode){var evenCoef=_.options.slidesToShow%2==0?1:0;if(centerOffset=Math.floor(_.options.slidesToShow/2),!0===_.options.infinite){if(centerOffset<=index&&index<=_.slideCount-1-centerOffset)_.$slides.slice(index-centerOffset+evenCoef,index+centerOffset+1).addClass("slick-active").attr("aria-hidden","false");else indexOffset=_.options.slidesToShow+index,allSlides.slice(indexOffset-centerOffset+1+evenCoef,indexOffset+centerOffset+2).addClass("slick-active").attr("aria-hidden","false");if(0===index)allSlides.eq(allSlides.length-1-_.options.slidesToShow).addClass("slick-center");else if(index===_.slideCount-1)allSlides.eq(_.options.slidesToShow).addClass("slick-center")}_.$slides.eq(index).addClass("slick-center")}else if(0<=index&&index<=_.slideCount-_.options.slidesToShow)_.$slides.slice(index,index+_.options.slidesToShow).addClass("slick-active").attr("aria-hidden","false");else if(allSlides.length<=_.options.slidesToShow)allSlides.addClass("slick-active").attr("aria-hidden","false");else if(remainder=_.slideCount%_.options.slidesToShow,indexOffset=!0===_.options.infinite?_.options.slidesToShow+index:index,_.options.slidesToShow==_.options.slidesToScroll&&_.slideCount-index<_.options.slidesToShow)allSlides.slice(indexOffset-(_.options.slidesToShow-remainder),indexOffset+remainder).addClass("slick-active").attr("aria-hidden","false");else allSlides.slice(indexOffset,indexOffset+_.options.slidesToShow).addClass("slick-active").attr("aria-hidden","false");if("ondemand"===_.options.lazyLoad||"anticipated"===_.options.lazyLoad)_.lazyLoad()},Slick.prototype.setupInfinite=function(){var i,slideIndex,infiniteCount,_=this;if(!0===_.options.fade)_.options.centerMode=!1;if(!0===_.options.infinite&&!1===_.options.fade)if(slideIndex=null,_.slideCount>_.options.slidesToShow){if(!0===_.options.centerMode)infiniteCount=_.options.slidesToShow+1;else infiniteCount=_.options.slidesToShow;for(i=_.slideCount;i>_.slideCount-infiniteCount;i-=1)slideIndex=i-1,$(_.$slides[slideIndex]).clone(!0).attr("id","").attr("data-slick-index",slideIndex-_.slideCount).prependTo(_.$slideTrack).addClass("slick-cloned");for(i=0;i<infiniteCount+_.slideCount;i+=1)slideIndex=i,$(_.$slides[slideIndex]).clone(!0).attr("id","").attr("data-slick-index",slideIndex+_.slideCount).appendTo(_.$slideTrack).addClass("slick-cloned");_.$slideTrack.find(".slick-cloned").find("[id]").each(function(){$(this).attr("id","")})}},Slick.prototype.interrupt=function(toggle){if(!toggle)this.autoPlay();this.interrupted=toggle},Slick.prototype.selectHandler=function(event){var _=this,targetElement=$(event.target).is(".slick-slide")?$(event.target):$(event.target).parents(".slick-slide"),index=parseInt(targetElement.attr("data-slick-index"));if(!index)index=0;if(!(_.slideCount<=_.options.slidesToShow))_.slideHandler(index);else _.slideHandler(index,!1,!0)},Slick.prototype.slideHandler=function(index,sync,dontAnimate){var targetSlide,animSlide,oldSlide,slideLeft,targetLeft,navTarget,_=this;if(sync=sync||!1,!0!==_.animating||!0!==_.options.waitForAnimate)if(!0!==_.options.fade||_.currentSlide!==index){if(!1===sync)_.asNavFor(index);if(targetSlide=index,targetLeft=_.getLeft(targetSlide),slideLeft=_.getLeft(_.currentSlide),_.currentLeft=null===_.swipeLeft?slideLeft:_.swipeLeft,!1!==_.options.infinite||!1!==_.options.centerMode||!(index<0||index>_.getDotCount()*_.options.slidesToScroll)){if(!1===_.options.infinite&&!0===_.options.centerMode&&(index<0||index>_.slideCount-_.options.slidesToScroll)){if(!1===_.options.fade)if(targetSlide=_.currentSlide,!0!==dontAnimate&&_.slideCount>_.options.slidesToShow)_.animateSlide(slideLeft,function(){_.postSlide(targetSlide)});else _.postSlide(targetSlide);return}if(_.options.autoplay)clearInterval(_.autoPlayTimer);if(targetSlide<0)if(_.slideCount%_.options.slidesToScroll!=0)animSlide=_.slideCount-_.slideCount%_.options.slidesToScroll;else animSlide=_.slideCount+targetSlide;else if(targetSlide>=_.slideCount)if(_.slideCount%_.options.slidesToScroll!=0)animSlide=0;else animSlide=targetSlide-_.slideCount;else animSlide=targetSlide;if(_.animating=!0,_.$slider.trigger("beforeChange",[_,_.currentSlide,animSlide]),oldSlide=_.currentSlide,_.currentSlide=animSlide,_.setSlideClasses(_.currentSlide),_.options.asNavFor)if((navTarget=(navTarget=_.getNavTarget()).slick("getSlick")).slideCount<=navTarget.options.slidesToShow)navTarget.setSlideClasses(_.currentSlide);if(_.updateDots(),_.updateArrows(),!0!==_.options.fade)if(!0!==dontAnimate&&_.slideCount>_.options.slidesToShow)_.animateSlide(targetLeft,function(){_.postSlide(animSlide)});else _.postSlide(animSlide);else{if(!0!==dontAnimate)_.fadeSlideOut(oldSlide),_.fadeSlide(animSlide,function(){_.postSlide(animSlide)});else _.postSlide(animSlide);_.animateHeight()}}else if(!1===_.options.fade)if(targetSlide=_.currentSlide,!0!==dontAnimate&&_.slideCount>_.options.slidesToShow)_.animateSlide(slideLeft,function(){_.postSlide(targetSlide)});else _.postSlide(targetSlide)}},Slick.prototype.startLoad=function(){var _=this;if(!0===_.options.arrows&&_.slideCount>_.options.slidesToShow)_.$prevArrow.hide(),_.$nextArrow.hide();if(!0===_.options.dots&&_.slideCount>_.options.slidesToShow)_.$dots.hide();_.$slider.addClass("slick-loading")},Slick.prototype.swipeDirection=function(){var xDist,yDist,r,swipeAngle,_=this;if(xDist=_.touchObject.startX-_.touchObject.curX,yDist=_.touchObject.startY-_.touchObject.curY,r=Math.atan2(yDist,xDist),(swipeAngle=Math.round(180*r/Math.PI))<0)swipeAngle=360-Math.abs(swipeAngle);if(swipeAngle<=45&&0<=swipeAngle)return!1===_.options.rtl?"left":"right";if(swipeAngle<=360&&315<=swipeAngle)return!1===_.options.rtl?"left":"right";if(135<=swipeAngle&&swipeAngle<=225)return!1===_.options.rtl?"right":"left";if(!0===_.options.verticalSwiping)if(35<=swipeAngle&&swipeAngle<=135)return"down";else return"up";return"vertical"},Slick.prototype.swipeEnd=function(event){var slideCount,direction,_=this;if(_.dragging=!1,_.swiping=!1,_.scrolling)return _.scrolling=!1;if(_.interrupted=!1,_.shouldClick=10<_.touchObject.swipeLength?!1:!0,void 0===_.touchObject.curX)return!1;if(!0===_.touchObject.edgeHit)_.$slider.trigger("edge",[_,_.swipeDirection()]);if(_.touchObject.swipeLength>=_.touchObject.minSwipe){switch(direction=_.swipeDirection()){case"left":case"down":slideCount=_.options.swipeToSlide?_.checkNavigable(_.currentSlide+_.getSlideCount()):_.currentSlide+_.getSlideCount(),_.currentDirection=0;break;case"right":case"up":slideCount=_.options.swipeToSlide?_.checkNavigable(_.currentSlide-_.getSlideCount()):_.currentSlide-_.getSlideCount(),_.currentDirection=1}if("vertical"!=direction)_.slideHandler(slideCount),_.touchObject={},_.$slider.trigger("swipe",[_,direction])}else if(_.touchObject.startX!==_.touchObject.curX)_.slideHandler(_.currentSlide),_.touchObject={}},Slick.prototype.swipeHandler=function(event){var _=this;if(!(!1===_.options.swipe||"ontouchend"in document&&!1===_.options.swipe)){if(!1===_.options.draggable&&-1!==event.type.indexOf("mouse"))return;if(_.touchObject.fingerCount=event.originalEvent&&void 0!==event.originalEvent.touches?event.originalEvent.touches.length:1,_.touchObject.minSwipe=_.listWidth/_.options.touchThreshold,!0===_.options.verticalSwiping)_.touchObject.minSwipe=_.listHeight/_.options.touchThreshold;switch(event.data.action){case"start":_.swipeStart(event);break;case"move":_.swipeMove(event);break;case"end":_.swipeEnd(event)}}},Slick.prototype.swipeMove=function(event){var curLeft,swipeDirection,swipeLength,positionOffset,touches,verticalSwipeLength,_=this;if(touches=void 0!==event.originalEvent?event.originalEvent.touches:null,!_.dragging||_.scrolling||touches&&1!==touches.length)return!1;if(curLeft=_.getLeft(_.currentSlide),_.touchObject.curX=void 0!==touches?touches[0].pageX:event.clientX,_.touchObject.curY=void 0!==touches?touches[0].pageY:event.clientY,_.touchObject.swipeLength=Math.round(Math.sqrt(Math.pow(_.touchObject.curX-_.touchObject.startX,2))),verticalSwipeLength=Math.round(Math.sqrt(Math.pow(_.touchObject.curY-_.touchObject.startY,2))),!_.options.verticalSwiping&&!_.swiping&&4<verticalSwipeLength)return!(_.scrolling=!0);if(!0===_.options.verticalSwiping)_.touchObject.swipeLength=verticalSwipeLength;if(swipeDirection=_.swipeDirection(),void 0!==event.originalEvent&&4<_.touchObject.swipeLength)_.swiping=!0,event.preventDefault();if(positionOffset=(!1===_.options.rtl?1:-1)*(_.touchObject.curX>_.touchObject.startX?1:-1),!0===_.options.verticalSwiping)positionOffset=_.touchObject.curY>_.touchObject.startY?1:-1;if(swipeLength=_.touchObject.swipeLength,(_.touchObject.edgeHit=!1)===_.options.infinite)if(0===_.currentSlide&&"right"===swipeDirection||_.currentSlide>=_.getDotCount()&&"left"===swipeDirection)swipeLength=_.touchObject.swipeLength*_.options.edgeFriction,_.touchObject.edgeHit=!0;if(!1===_.options.vertical)_.swipeLeft=curLeft+swipeLength*positionOffset;else _.swipeLeft=curLeft+swipeLength*(_.$list.height()/_.listWidth)*positionOffset;if(!0===_.options.verticalSwiping)_.swipeLeft=curLeft+swipeLength*positionOffset;if(!0===_.options.fade||!1===_.options.touchMove)return!1;if(!0===_.animating)return _.swipeLeft=null,!1;else _.setCSS(_.swipeLeft)},Slick.prototype.swipeStart=function(event){var touches,_=this;if(_.interrupted=!0,1!==_.touchObject.fingerCount||_.slideCount<=_.options.slidesToShow)return!(_.touchObject={});if(void 0!==event.originalEvent&&void 0!==event.originalEvent.touches)touches=event.originalEvent.touches[0];_.touchObject.startX=_.touchObject.curX=void 0!==touches?touches.pageX:event.clientX,_.touchObject.startY=_.touchObject.curY=void 0!==touches?touches.pageY:event.clientY,_.dragging=!0},Slick.prototype.unfilterSlides=Slick.prototype.slickUnfilter=function(){var _=this;if(null!==_.$slidesCache)_.unload(),_.$slideTrack.children(this.options.slide).detach(),_.$slidesCache.appendTo(_.$slideTrack),_.reinit()},Slick.prototype.unload=function(){var _=this;if($(".slick-cloned",_.$slider).remove(),_.$dots)_.$dots.remove();if(_.$prevArrow&&_.htmlExpr.test(_.options.prevArrow))_.$prevArrow.remove();if(_.$nextArrow&&_.htmlExpr.test(_.options.nextArrow))_.$nextArrow.remove();_.$slides.removeClass("slick-slide slick-active slick-visible slick-current").attr("aria-hidden","true").css("width","")},Slick.prototype.unslick=function(fromBreakpoint){var _=this;_.$slider.trigger("unslick",[_,fromBreakpoint]),_.destroy()},Slick.prototype.updateArrows=function(){var _=this;if(Math.floor(_.options.slidesToShow/2),!0===_.options.arrows&&_.slideCount>_.options.slidesToShow&&!_.options.infinite)if(_.$prevArrow.removeClass("slick-disabled").attr("aria-disabled","false"),_.$nextArrow.removeClass("slick-disabled").attr("aria-disabled","false"),0===_.currentSlide)_.$prevArrow.addClass("slick-disabled").attr("aria-disabled","true"),_.$nextArrow.removeClass("slick-disabled").attr("aria-disabled","false");else if(_.currentSlide>=_.slideCount-_.options.slidesToShow&&!1===_.options.centerMode)_.$nextArrow.addClass("slick-disabled").attr("aria-disabled","true"),_.$prevArrow.removeClass("slick-disabled").attr("aria-disabled","false");else if(_.currentSlide>=_.slideCount-1&&!0===_.options.centerMode)_.$nextArrow.addClass("slick-disabled").attr("aria-disabled","true"),_.$prevArrow.removeClass("slick-disabled").attr("aria-disabled","false")},Slick.prototype.updateDots=function(){var _=this;if(null!==_.$dots)_.$dots.find("li").removeClass("slick-active").end(),_.$dots.find("li").eq(Math.floor(_.currentSlide/_.options.slidesToScroll)).addClass("slick-active")},Slick.prototype.visibility=function(){var _=this;if(_.options.autoplay)if(document[_.hidden])_.interrupted=!0;else _.interrupted=!1},$.fn.slick=function(){var i,ret,_=this,opt=arguments[0],args=Array.prototype.slice.call(arguments,1),l=_.length;for(i=0;i<l;i++){if("object"==typeof opt||void 0===opt)_[i].slick=new Slick(_[i],opt);else ret=_[i].slick[opt].apply(_[i].slick,args);if(void 0!==ret)return ret}return _}});;
+!function($,Drupal,drupalSettings){"use strict";Drupal.behaviors.CohesionSlick={attach:function(context){var gridSettings=drupalSettings.cohesion.responsive_grid_settings,cmm=new Drupal.CohesionResponsiveBreakpoints(drupalSettings.cohesion.responsive_grid_settings),once="coh-slider-container-init";$.each($(".coh-slider-container",context),function(){var $this=$(this),$slider=$("> .coh-slider-container-mid > .coh-slider-container-inner",this);if(!$this.data("jquery-once-"+once)){$slider.on("init",function(event,slick){var clones=$($(".slick-cloned",slick.$slideTrack));$this.once(once),$.each(clones,function(){Drupal.behaviors.CohesionSlick.attach($(this))})});var settings=$slider.data().cohSlider;if(settings.mobileFirst=cmm.getGridType()===cmm.constants.mobile,settings.customPaging=function(slider,i){return 1==settings.dotsNumbers?i+1:""},void 0!==settings.asNavFor)settings.asNavFor=$(settings.asNavFor+" .coh-slider-container-inner");for(var responsive=[],matchHeights={},matchHeightsInit=!1,previousResponsiveSettings=!1,i=0;i<cmm.breakpoints.length;i++){var breakpointKey=cmm.breakpoints[i].key,breakpoint=settings.responsive[breakpointKey];if(void 0!==breakpoint&&void 0!==breakpoint.matchHeights&&!$.isArray(breakpoint.matchHeights)){if(matchHeights[breakpointKey]=settings.responsive[breakpointKey].matchHeights,void 0!==matchHeights[breakpointKey].class)matchHeights[breakpointKey].target=matchHeights[breakpointKey].class;matchHeightsInit=!0}if(cmm.getGridType()!==cmm.constants.mobile&&"xl"===breakpointKey){if(void 0!==breakpoint.appendArrows)breakpoint.appendArrows=$(breakpoint.appendArrows.trim()+":first",$this);if(void 0!==breakpoint.appendDots)breakpoint.appendDots=$(breakpoint.appendDots.trim()+":first",$this);jQuery.extend(settings,breakpoint)}else if(!jQuery.isEmptyObject(breakpoint)){var responsive_obj={settings:breakpoint};if(void 0===gridSettings.breakpoints[breakpointKey].width)responsive_obj.breakpoint=0;else if(cmm.getGridType()===cmm.constants.desktop)responsive_obj.breakpoint=cmm.getBreakpointMediaWidth(breakpointKey)+1;else responsive_obj.breakpoint=cmm.getBreakpointMediaWidth(breakpointKey);if(void 0!==breakpoint.appendArrows&&void 0!==breakpoint.appendArrows)responsive_obj.settings.appendArrows=$(breakpoint.appendArrows.trim()+"",$this);if(void 0!==breakpoint.appendDots&&void 0!==breakpoint.appendDots)responsive_obj.settings.appendDots=$(breakpoint.appendDots.trim()+"",$this);if(!1!==previousResponsiveSettings)responsive_obj.settings=$.extend({},previousResponsiveSettings,responsive_obj.settings);previousResponsiveSettings=responsive_obj.settings,responsive.push(responsive_obj)}}if(settings.responsive=responsive,$slider.slick(settings),!1!==matchHeightsInit)$slider.cohesionContainerMatchHeights({excludeElements:["slide","slide-basic"],targets:matchHeights,context:context,expressionPrefixes:[".slick-list > .slick-track",".slick-list > .slick-track > .coh-slider-item",".slick-list > .slick-track > .coh-slider-item > .coh-slider-item-inner"],loaders:[".coh-slider-container > .coh-slider-container-mid > .coh-slider-container-inner img",".coh-slider-container > .coh-slider-container-mid > .coh-slider-container-inner frame",".coh-slider-container > .coh-slider-container-mid > .coh-slider-container-inner iframe",".coh-slider-container > .coh-slider-container-mid > .coh-slider-container-inner img",'.coh-slider-container > .coh-slider-container-mid > .coh-slider-container-inner input[type="image"]',".coh-slider-container > .coh-slider-container-mid > .coh-slider-container-inner link",".coh-slider-container > .coh-slider-container-mid > .coh-slider-container-inner script",".coh-slider-container > .coh-slider-container-mid > .coh-slider-container-inner style"]});var breakpointOriginal=!1;if(0<$.fn.matchHeight._groups.length)$slider.on("breakpoint",function(event,slick,breakpoint){if(breakpointOriginal!==breakpoint)$.fn.matchHeight._update(),breakpointOriginal=breakpoint})}else $slider.slick("refresh")})}}}(jQuery,Drupal,drupalSettings);;
+/**
+* DO NOT EDIT THIS FILE.
+* See the following change record for more information,
+* https://www.drupal.org/node/2815083
+* @preserve
+**/
+
+(function ($, Drupal) {
+  var states = {
+    postponed: []
+  };
+
+  Drupal.states = states;
+
+  function invert(a, invertState) {
+    return invertState && typeof a !== 'undefined' ? !a : a;
+  }
+
+  function _compare2(a, b) {
+    if (a === b) {
+      return typeof a === 'undefined' ? a : true;
+    }
+
+    return typeof a === 'undefined' || typeof b === 'undefined';
+  }
+
+  Drupal.behaviors.states = {
+    attach: function attach(context, settings) {
+      var $states = $(context).find('[data-drupal-states]');
+      var il = $states.length;
+
+      var _loop = function _loop(i) {
+        var config = JSON.parse($states[i].getAttribute('data-drupal-states'));
+        Object.keys(config || {}).forEach(function (state) {
+          new states.Dependent({
+            element: $($states[i]),
+            state: states.State.sanitize(state),
+            constraints: config[state]
+          });
+        });
+      };
+
+      for (var i = 0; i < il; i++) {
+        _loop(i);
+      }
+
+      while (states.postponed.length) {
+        states.postponed.shift()();
+      }
+    }
+  };
+
+  states.Dependent = function (args) {
+    var _this = this;
+
+    $.extend(this, { values: {}, oldValue: null }, args);
+
+    this.dependees = this.getDependees();
+    Object.keys(this.dependees || {}).forEach(function (selector) {
+      _this.initializeDependee(selector, _this.dependees[selector]);
+    });
+  };
+
+  states.Dependent.comparisons = {
+    RegExp: function RegExp(reference, value) {
+      return reference.test(value);
+    },
+    Function: function Function(reference, value) {
+      return reference(value);
+    },
+    Number: function Number(reference, value) {
+      return typeof value === 'string' ? _compare2(reference.toString(), value) : _compare2(reference, value);
+    }
+  };
+
+  states.Dependent.prototype = {
+    initializeDependee: function initializeDependee(selector, dependeeStates) {
+      var _this2 = this;
+
+      this.values[selector] = {};
+
+      Object.keys(dependeeStates).forEach(function (i) {
+        var state = dependeeStates[i];
+
+        if ($.inArray(state, dependeeStates) === -1) {
+          return;
+        }
+
+        state = states.State.sanitize(state);
+
+        _this2.values[selector][state.name] = null;
+
+        $(selector).on('state:' + state, { selector: selector, state: state }, function (e) {
+          _this2.update(e.data.selector, e.data.state, e.value);
+        });
+
+        new states.Trigger({ selector: selector, state: state });
+      });
+    },
+    compare: function compare(reference, selector, state) {
+      var value = this.values[selector][state.name];
+      if (reference.constructor.name in states.Dependent.comparisons) {
+        return states.Dependent.comparisons[reference.constructor.name](reference, value);
+      }
+
+      return _compare2(reference, value);
+    },
+    update: function update(selector, state, value) {
+      if (value !== this.values[selector][state.name]) {
+        this.values[selector][state.name] = value;
+        this.reevaluate();
+      }
+    },
+    reevaluate: function reevaluate() {
+      var value = this.verifyConstraints(this.constraints);
+
+      if (value !== this.oldValue) {
+        this.oldValue = value;
+
+        value = invert(value, this.state.invert);
+
+        this.element.trigger({
+          type: 'state:' + this.state,
+          value: value,
+          trigger: true
+        });
+      }
+    },
+    verifyConstraints: function verifyConstraints(constraints, selector) {
+      var _this3 = this;
+
+      var result = void 0;
+      if ($.isArray(constraints)) {
+        var hasXor = $.inArray('xor', constraints) === -1;
+        var len = constraints.length;
+        for (var i = 0; i < len; i++) {
+          if (constraints[i] !== 'xor') {
+            var constraint = this.checkConstraints(constraints[i], selector, i);
+
+            if (constraint && (hasXor || result)) {
+              return hasXor;
+            }
+            result = result || constraint;
+          }
+        }
+      } else if ($.isPlainObject(constraints)) {
+          result = Object.keys(constraints).every(function (constraint) {
+            var check = _this3.checkConstraints(constraints[constraint], selector, constraint);
+
+            return typeof check === 'undefined' ? true : check;
+          });
+        }
+      return result;
+    },
+    checkConstraints: function checkConstraints(value, selector, state) {
+      if (typeof state !== 'string' || /[0-9]/.test(state[0])) {
+        state = null;
+      } else if (typeof selector === 'undefined') {
+        selector = state;
+        state = null;
+      }
+
+      if (state !== null) {
+        state = states.State.sanitize(state);
+        return invert(this.compare(value, selector, state), state.invert);
+      }
+
+      return this.verifyConstraints(value, selector);
+    },
+    getDependees: function getDependees() {
+      var cache = {};
+
+      var _compare = this.compare;
+      this.compare = function (reference, selector, state) {
+        (cache[selector] || (cache[selector] = [])).push(state.name);
+      };
+
+      this.verifyConstraints(this.constraints);
+
+      this.compare = _compare;
+
+      return cache;
+    }
+  };
+
+  states.Trigger = function (args) {
+    $.extend(this, args);
+
+    if (this.state in states.Trigger.states) {
+      this.element = $(this.selector);
+
+      if (!this.element.data('trigger:' + this.state)) {
+        this.initialize();
+      }
+    }
+  };
+
+  states.Trigger.prototype = {
+    initialize: function initialize() {
+      var _this4 = this;
+
+      var trigger = states.Trigger.states[this.state];
+
+      if (typeof trigger === 'function') {
+        trigger.call(window, this.element);
+      } else {
+        Object.keys(trigger || {}).forEach(function (event) {
+          _this4.defaultTrigger(event, trigger[event]);
+        });
+      }
+
+      this.element.data('trigger:' + this.state, true);
+    },
+    defaultTrigger: function defaultTrigger(event, valueFn) {
+      var oldValue = valueFn.call(this.element);
+
+      this.element.on(event, $.proxy(function (e) {
+        var value = valueFn.call(this.element, e);
+
+        if (oldValue !== value) {
+          this.element.trigger({
+            type: 'state:' + this.state,
+            value: value,
+            oldValue: oldValue
+          });
+          oldValue = value;
+        }
+      }, this));
+
+      states.postponed.push($.proxy(function () {
+        this.element.trigger({
+          type: 'state:' + this.state,
+          value: oldValue,
+          oldValue: null
+        });
+      }, this));
+    }
+  };
+
+  states.Trigger.states = {
+    empty: {
+      keyup: function keyup() {
+        return this.val() === '';
+      }
+    },
+
+    checked: {
+      change: function change() {
+        var checked = false;
+        this.each(function () {
+          checked = $(this).prop('checked');
+
+          return !checked;
+        });
+        return checked;
+      }
+    },
+
+    value: {
+      keyup: function keyup() {
+        if (this.length > 1) {
+          return this.filter(':checked').val() || false;
+        }
+        return this.val();
+      },
+      change: function change() {
+        if (this.length > 1) {
+          return this.filter(':checked').val() || false;
+        }
+        return this.val();
+      }
+    },
+
+    collapsed: {
+      collapsed: function collapsed(e) {
+        return typeof e !== 'undefined' && 'value' in e ? e.value : !this.is('[open]');
+      }
+    }
+  };
+
+  states.State = function (state) {
+    this.pristine = state;
+    this.name = state;
+
+    var process = true;
+    do {
+      while (this.name.charAt(0) === '!') {
+        this.name = this.name.substring(1);
+        this.invert = !this.invert;
+      }
+
+      if (this.name in states.State.aliases) {
+        this.name = states.State.aliases[this.name];
+      } else {
+        process = false;
+      }
+    } while (process);
+  };
+
+  states.State.sanitize = function (state) {
+    if (state instanceof states.State) {
+      return state;
+    }
+
+    return new states.State(state);
+  };
+
+  states.State.aliases = {
+    enabled: '!disabled',
+    invisible: '!visible',
+    invalid: '!valid',
+    untouched: '!touched',
+    optional: '!required',
+    filled: '!empty',
+    unchecked: '!checked',
+    irrelevant: '!relevant',
+    expanded: '!collapsed',
+    open: '!collapsed',
+    closed: 'collapsed',
+    readwrite: '!readonly'
+  };
+
+  states.State.prototype = {
+    invert: false,
+
+    toString: function toString() {
+      return this.name;
+    }
+  };
+
+  var $document = $(document);
+  $document.on('state:disabled', function (e) {
+    if (e.trigger) {
+      $(e.target).prop('disabled', e.value).closest('.js-form-item, .js-form-submit, .js-form-wrapper').toggleClass('form-disabled', e.value).find('select, input, textarea').prop('disabled', e.value);
+    }
+  });
+
+  $document.on('state:required', function (e) {
+    if (e.trigger) {
+      if (e.value) {
+        var label = 'label' + (e.target.id ? '[for=' + e.target.id + ']' : '');
+        var $label = $(e.target).attr({ required: 'required', 'aria-required': 'aria-required' }).closest('.js-form-item, .js-form-wrapper').find(label);
+
+        if (!$label.hasClass('js-form-required').length) {
+          $label.addClass('js-form-required form-required');
+        }
+      } else {
+        $(e.target).removeAttr('required aria-required').closest('.js-form-item, .js-form-wrapper').find('label.js-form-required').removeClass('js-form-required form-required');
+      }
+    }
+  });
+
+  $document.on('state:visible', function (e) {
+    if (e.trigger) {
+      $(e.target).closest('.js-form-item, .js-form-submit, .js-form-wrapper').toggle(e.value);
+    }
+  });
+
+  $document.on('state:checked', function (e) {
+    if (e.trigger) {
+      $(e.target).prop('checked', e.value);
+    }
+  });
+
+  $document.on('state:collapsed', function (e) {
+    if (e.trigger) {
+      if ($(e.target).is('[open]') === e.value) {
+        $(e.target).find('> summary').trigger('click');
+      }
+    }
+  });
+})(jQuery, Drupal);;
+/**
+ * @file
+ * JavaScript behaviors for custom webform #states.
+ */
+
+(function ($, Drupal) {
+
+  'use strict';
+
+  Drupal.webform = Drupal.webform || {};
+  Drupal.webform.states = Drupal.webform.states || {};
+  Drupal.webform.states.slideDown = Drupal.webform.states.slideDown || {};
+  Drupal.webform.states.slideDown.duration = 'slow';
+  Drupal.webform.states.slideUp = Drupal.webform.states.slideUp || {};
+  Drupal.webform.states.slideUp.duration = 'fast';
+
+  /**
+   * Check if an element has a specified data attribute.
+   *
+   * @param {string} data
+   *   The data attribute name.
+   *
+   * @returns {boolean}
+   *   TRUE if an element has a specified data attribute.
+   */
+  $.fn.hasData = function (data) {
+    return (typeof this.data(data) !== 'undefined');
+  };
+
+  /**
+   * Check if element is within the webform or not.
+   *
+   * @returns {boolean}
+   *   TRUE if element is within the webform.
+   */
+  $.fn.isWebform = function () {
+    return $(this).closest('form[id^="webform"]').length ? true : false;
+  };
+
+  // The change event is triggered by cut-n-paste and select menus.
+  // Issue #2445271: #states element empty check not triggered on mouse
+  // based paste.
+  // @see https://www.drupal.org/node/2445271
+  Drupal.states.Trigger.states.empty.change = function change() {
+    return this.val() === '';
+  };
+
+  // Apply solution included in #1962800 patch.
+  // Issue #1962800: Form #states not working with literal integers as
+  // values in IE11.
+  // @see https://www.drupal.org/project/drupal/issues/1962800
+  // @see https://www.drupal.org/files/issues/core-states-not-working-with-integers-ie11_1962800_46.patch
+  //
+  // This issue causes pattern, less than, and greater than support to break.
+  // @see https://www.drupal.org/project/webform/issues/2981724
+  var states = Drupal.states;
+  Drupal.states.Dependent.prototype.compare = function compare(reference, selector, state) {
+    var value = this.values[selector][state.name];
+
+    var name = reference.constructor.name;
+    if (!name) {
+      name = $.type(reference);
+
+      name = name.charAt(0).toUpperCase() + name.slice(1);
+    }
+    if (name in states.Dependent.comparisons) {
+      return states.Dependent.comparisons[name](reference, value);
+    }
+
+    if (reference.constructor.name in states.Dependent.comparisons) {
+      return states.Dependent.comparisons[reference.constructor.name](reference, value);
+    }
+
+    return _compare2(reference, value);
+  };
+  function _compare2(a, b) {
+    if (a === b) {
+      return typeof a === 'undefined' ? a : true;
+    }
+
+    return typeof a === 'undefined' || typeof b === 'undefined';
+  }
+
+  // Adds pattern, less than, and greater than support to #state API.
+  // @see http://drupalsun.com/julia-evans/2012/03/09/extending-form-api-states-regular-expressions
+  Drupal.states.Dependent.comparisons.Object = function (reference, value) {
+    if ('pattern' in reference) {
+      return (new RegExp(reference['pattern'])).test(value);
+    }
+    else if ('!pattern' in reference) {
+      return !((new RegExp(reference['!pattern'])).test(value));
+    }
+    else if ('less' in reference) {
+      return (value !== '' && parseFloat(reference['less']) > parseFloat(value));
+    }
+    else if ('greater' in reference) {
+      return (value !== '' && parseFloat(reference['greater']) < parseFloat(value));
+    }
+    else {
+      return reference.indexOf(value) !== false;
+    }
+  };
+
+  var $document = $(document);
+
+  $document.on('state:required', function (e) {
+    if (e.trigger && $(e.target).isWebform()) {
+      var $target = $(e.target);
+      // Fix #required file upload.
+      // @see Issue #2860529: Conditional required File upload field don't work.
+      if (e.value) {
+        $target.find('input[type="file"]').attr({'required': 'required', 'aria-required': 'true'});
+      }
+      else {
+        $target.find('input[type="file"]').removeAttr('required aria-required');
+      }
+
+      // Fix required label for checkboxes and radios.
+      // @see Issue #2938414: Checkboxes don't support #states required
+      // @see Issue #2731991: Setting required on radios marks all options required.
+      // @see Issue #2856315: Conditional Logic - Requiring Radios in a Fieldset.
+      // Fix #required for fieldsets.
+      // @see Issue #2977569: Hidden fieldsets that become visible with conditional logic cannot be made required.
+      if ($target.is('.js-webform-type-radios, .js-webform-type-checkboxes, fieldset')) {
+        if (e.value) {
+          $target.find('legend span:not(.visually-hidden)').addClass('js-form-required form-required');
+        }
+        else {
+          $target.find('legend span:not(.visually-hidden)').removeClass('js-form-required form-required');
+        }
+      }
+
+      // Fix #required for radios.
+      // @see Issue #2856795: If radio buttons are required but not filled form is nevertheless submitted.
+      if ($target.is('.js-webform-type-radios, .js-form-type-webform-radios-other')) {
+        if (e.value) {
+          $target.find('input[type="radio"]').attr({'required': 'required', 'aria-required': 'true'});
+        }
+        else {
+          $target.find('input[type="radio"]').removeAttr('required aria-required');
+        }
+      }
+
+      // Fix #required for checkboxes.
+      // @see Issue #2938414: Checkboxes don't support #states required.
+      // @see checkboxRequiredhandler
+      if ($target.is('.js-webform-type-checkboxes, .js-form-type-webform-checkboxes-other')) {
+        var $checkboxes = $target.find('input[type="checkbox"]');
+        if (e.value) {
+          // Bind the event handler and add custom HTML5 required validation
+          // to all checkboxes.
+          $checkboxes.bind('click', checkboxRequiredhandler);
+          if (!$checkboxes.is(':checked')) {
+            $checkboxes.attr({'required': 'required', 'aria-required': 'true'});
+          }
+        }
+        else {
+          // Remove custom HTML5 required validation from all checkboxes
+          // and unbind the event handler.
+          $checkboxes
+            .removeAttr('required aria-required')
+            .unbind('click', checkboxRequiredhandler);
+        }
+      }
+
+      // Issue #2986017: Fieldsets shouldn't have required attribute.
+      if ($target.is('fieldset')) {
+        $target.removeAttr('required aria-required');
+      }
+    }
+
+  });
+
+  $document.on('state:readonly', function (e) {
+    if (e.trigger && $(e.target).isWebform()) {
+      $(e.target).prop('readonly', e.value).closest('.js-form-item, .js-form-wrapper').toggleClass('webform-readonly', e.value).find('input, textarea').prop('readonly', e.value);
+    }
+  });
+
+  $document.on('state:visible state:visible-slide', function (e) {
+    if (e.trigger && $(e.target).isWebform()) {
+      if (e.value) {
+        $(':input', e.target).addBack().each(function () {
+          restoreValueAndRequired(this);
+          triggerEventHandlers(this);
+        });
+      }
+      else {
+        // @see https://www.sitepoint.com/jquery-function-clear-form-data/
+        $(':input', e.target).addBack().each(function () {
+          backupValueAndRequired(this);
+          clearValueAndRequired(this);
+          triggerEventHandlers(this);
+        });
+      }
+    }
+  });
+
+  $document.bind('state:visible-slide', function (e) {
+    if (e.trigger && $(e.target).isWebform()) {
+      var effect = e.value ? 'slideDown' : 'slideUp';
+      var duration = Drupal.webform.states[effect].duration;
+      $(e.target).closest('.js-form-item, .js-form-submit, .js-form-wrapper')[effect](duration);
+    }
+  });
+  Drupal.states.State.aliases['invisible-slide'] = '!visible-slide';
+
+  $document.on('state:disabled', function (e) {
+    if (e.trigger && $(e.target).isWebform()) {
+      // Make sure disabled property is set before triggering webform:disabled.
+      // Copied from: core/misc/states.js
+      $(e.target)
+        .prop('disabled', e.value)
+        .closest('.js-form-item, .js-form-submit, .js-form-wrapper').toggleClass('form-disabled', e.value)
+        .find('select, input, textarea').prop('disabled', e.value);
+
+      // Trigger webform:disabled.
+      $(e.target).trigger('webform:disabled')
+        .find('select, input, textarea').trigger('webform:disabled');
+    }
+  });
+
+  /**
+   * Trigger custom HTML5 multiple checkboxes validation.
+   *
+   * @see https://stackoverflow.com/a/37825072/145846
+   */
+  function checkboxRequiredhandler() {
+    var $checkboxes = $(this).closest('.js-webform-type-checkboxes, .js-form-type-webform-checkboxes-other').find('input[type="checkbox"]');
+    if ($checkboxes.is(':checked')) {
+      $checkboxes.removeAttr('required aria-required');
+    }
+    else {
+      $checkboxes.attr({'required': 'required', 'aria-required': 'true'});
+    }
+  }
+
+  /**
+   * Trigger an input's event handlers.
+   *
+   * @param input
+   *   An input.
+   */
+  function triggerEventHandlers(input) {
+    var $input = $(input);
+    var type = input.type;
+    var tag = input.tagName.toLowerCase();
+    // Add 'webform.states' as extra parameter to event handlers.
+    // @see Drupal.behaviors.webformUnsaved
+    var extraParameters = ['webform.states'];
+    if (type === 'checkbox' || type === 'radio') {
+      $input
+        .trigger('change', extraParameters)
+        .trigger('blur', extraParameters);
+    }
+    else if (tag === 'select') {
+      $input
+        .trigger('change', extraParameters)
+        .trigger('blur', extraParameters);
+    }
+    else if (type !== 'submit' && type !== 'button' && type !== 'file') {
+      $input
+        .trigger('input', extraParameters)
+        .trigger('change', extraParameters)
+        .trigger('keydown', extraParameters)
+        .trigger('keyup', extraParameters)
+        .trigger('blur', extraParameters);
+    }
+  }
+
+  /**
+   * Backup an input's current value and required attribute
+   *
+   * @param input
+   *   An input.
+   */
+  function backupValueAndRequired(input) {
+    var $input = $(input);
+    var type = input.type;
+    var tag = input.tagName.toLowerCase(); // Normalize case.
+
+    // Backup required.
+    if ($input.prop('required') && !$input.hasData('webform-required')) {
+      $input.data('webform-required', true);
+    }
+
+    // Backup value.
+    if (!$input.hasData('webform-value')) {
+      if (type === 'checkbox' || type === 'radio') {
+        $input.data('webform-value', $input.prop('checked'));
+      }
+      else if (tag === 'select') {
+        var values = [];
+        $input.find('option:selected').each(function (i, option) {
+          values[i] = option.value;
+        });
+        $input.data('webform-value', values);
+      }
+      else if (type !== 'submit' && type !== 'button') {
+        $input.data('webform-value', input.value);
+      }
+    }
+  }
+
+  /**
+   * Restore an input's value and required attribute.
+   *
+   * @param input
+   *   An input.
+   */
+  function restoreValueAndRequired(input) {
+    var $input = $(input);
+
+    // Restore value.
+    var value = $input.data('webform-value');
+    if (typeof value !== 'undefined') {
+      var type = input.type;
+      var tag = input.tagName.toLowerCase(); // Normalize case.
+
+      if (type === 'checkbox' || type === 'radio') {
+        $input.prop('checked', value);
+      }
+      else if (tag === 'select') {
+        $.each(value, function (i, option_value) {
+          $input.find("option[value='" + option_value + "']").prop('selected', true);
+        });
+      }
+      else if (type !== 'submit' && type !== 'button') {
+        input.value = value;
+      }
+      $input.removeData('webform-value');
+    }
+
+    // Restore required.
+    var required = $input.data('webform-required');
+    if (typeof required !== 'undefined') {
+      if (required) {
+        $input.prop('required', true);
+      }
+      $input.removeData('webform-required');
+    }
+  }
+
+  /**
+   * Clear an input's value and required attributes.
+   *
+   * @param input
+   *   An input.
+   */
+  function clearValueAndRequired(input) {
+    var $input = $(input);
+
+    // Check for #states no clear attribute.
+    // @see https://css-tricks.com/snippets/jquery/make-an-jquery-hasattr/
+    if ($input.closest('[data-webform-states-no-clear]').length) {
+      return;
+    }
+
+    // Clear value.
+    var type = input.type;
+    var tag = input.tagName.toLowerCase(); // Normalize case.
+    if (type === 'checkbox' || type === 'radio') {
+      $input.prop('checked', false);
+    }
+    else if (tag === 'select') {
+      if ($input.find('option[value=""]').length) {
+        $input.val('');
+      }
+      else {
+        input.selectedIndex = -1;
+      }
+    }
+    else if (type !== 'submit' && type !== 'button') {
+      input.value = (type === 'color') ? '#000000' : '';
+    }
+
+    // Clear required.
+    $input.prop('required', false);
+  }
+
+})(jQuery, Drupal);
+;
+/**
+ * @file
+ * JavaScript behaviors for webforms.
+ */
+
+(function ($, Drupal) {
+
+  'use strict';
+
+  /**
+   * Autofocus first input.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the behavior for the webform autofocusing.
+   */
+  Drupal.behaviors.webformAutofocus = {
+    attach: function (context) {
+      $(context).find('.webform-submission-form.js-webform-autofocus :input:visible:enabled:first').focus();
+    }
+  };
+
+  /**
+   * Prevent webform autosubmit on wizard pages.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the behavior for disabling webform autosubmit.
+   *   Wizard pages need to be progressed with the Previous or Next buttons, not by pressing Enter.
+   */
+  Drupal.behaviors.webformDisableAutoSubmit = {
+    attach: function (context) {
+      // @see http://stackoverflow.com/questions/11235622/jquery-disable-form-submit-on-enter
+      $(context).find('.webform-submission-form.js-webform-disable-autosubmit input')
+        .not(':button, :submit, :reset, :image, :file')
+        .once('webform-disable-autosubmit')
+        .on('keyup keypress', function (e) {
+          var keyCode = e.keyCode || e.which;
+          if (keyCode === 13) {
+            e.preventDefault();
+            return false;
+          }
+        });
+    }
+  };
+
+  /**
+   * Skip client-side validation when submit button is pressed.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the behavior for the skipping client-side validation.
+   */
+  Drupal.behaviors.webformSubmitNoValidate = {
+    attach: function (context) {
+      $(context).find(':submit.js-webform-novalidate').once('webform-novalidate').on('click', function () {
+        $(this.form).attr('novalidate', 'novalidate');
+      });
+    }
+  };
+
+  /**
+   * Attach behaviors to trigger submit button from input onchange.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches form trigger submit events.
+   */
+  Drupal.behaviors.webformSubmitTrigger = {
+    attach: function (context) {
+      $('[data-webform-trigger-submit]').once('webform-trigger-submit').on('change', function () {
+        var submit = $(this).attr('data-webform-trigger-submit');
+        $(submit).mousedown();
+      });
+    }
+  };
+
+  /**
+   * Custom required error message.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the behavior for the webform custom required error message.
+   *
+   * @see http://stackoverflow.com/questions/5272433/html5-form-required-attribute-set-custom-validation-message
+   */
+  Drupal.behaviors.webformRequiredError = {
+    attach: function (context) {
+      $(context).find(':input[data-webform-required-error]').once('webform-required-error')
+        .on('invalid', function () {
+          this.setCustomValidity('');
+          if (!this.valid) {
+            this.setCustomValidity($(this).attr('data-webform-required-error'));
+          }
+        })
+        .on('input, change', function () {
+          // Find all related elements by name and reset custom validity.
+          // This specifically applies to required radios and checkboxes.
+          var name = $(this).attr('name');
+          $(this.form).find(':input[name="' + name + '"]').each(function () {
+            this.setCustomValidity('');
+          });
+        });
+    }
+  };
+
+  // When #state:required is triggered we need to reset the target elements
+  // custom validity.
+  $(document).on('state:required', function (e) {
+    $(e.target).filter('[data-webform-required-error]')
+      .each(function () {this.setCustomValidity('');});
+  });
+
+  if (window.imceInput) {
+    window.imceInput.processUrlInput = function (i, el) {
+      var button = imceInput.createUrlButton(el.id, el.getAttribute('data-imce-type'));
+      el.parentNode.insertAfter(button, el);
+    };
+  }
+
+})(jQuery, Drupal);
+;
+/**
+* DO NOT EDIT THIS FILE.
+* See the following change record for more information,
+* https://www.drupal.org/node/2815083
+* @preserve
+**/
+
+Drupal.debounce = function (func, wait, immediate) {
+  var timeout = void 0;
+  var result = void 0;
+  return function () {
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    var context = this;
+    var later = function later() {
+      timeout = null;
+      if (!immediate) {
+        result = func.apply(context, args);
+      }
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) {
+      result = func.apply(context, args);
+    }
+    return result;
+  };
+};;
+/**
+* DO NOT EDIT THIS FILE.
+* See the following change record for more information,
+* https://www.drupal.org/node/2815083
+* @preserve
+**/
+
+(function (Drupal, debounce) {
+  var liveElement = void 0;
+  var announcements = [];
+
+  Drupal.behaviors.drupalAnnounce = {
+    attach: function attach(context) {
+      if (!liveElement) {
+        liveElement = document.createElement('div');
+        liveElement.id = 'drupal-live-announce';
+        liveElement.className = 'visually-hidden';
+        liveElement.setAttribute('aria-live', 'polite');
+        liveElement.setAttribute('aria-busy', 'false');
+        document.body.appendChild(liveElement);
+      }
+    }
+  };
+
+  function announce() {
+    var text = [];
+    var priority = 'polite';
+    var announcement = void 0;
+
+    var il = announcements.length;
+    for (var i = 0; i < il; i++) {
+      announcement = announcements.pop();
+      text.unshift(announcement.text);
+
+      if (announcement.priority === 'assertive') {
+        priority = 'assertive';
+      }
+    }
+
+    if (text.length) {
+      liveElement.innerHTML = '';
+
+      liveElement.setAttribute('aria-busy', 'true');
+
+      liveElement.setAttribute('aria-live', priority);
+
+      liveElement.innerHTML = text.join('\n');
+
+      liveElement.setAttribute('aria-busy', 'false');
+    }
+  }
+
+  Drupal.announce = function (text, priority) {
+    announcements.push({
+      text: text,
+      priority: priority
+    });
+
+    return debounce(announce, 200)();
+  };
+})(Drupal, Drupal.debounce);;
+/**
+ * @file
+ * JavaScript behaviors for details element.
+ */
+
+(function ($, Drupal) {
+
+  'use strict';
+
+  Drupal.webform = Drupal.webform || {};
+  Drupal.webform.detailsToggle = Drupal.webform.detailsToggle || {};
+  Drupal.webform.detailsToggle.options = Drupal.webform.detailsToggle.options || {};
+
+  /**
+   * Attach handler to toggle details open/close state.
+   *
+   * @type {Drupal~behavior}
+   */
+  Drupal.behaviors.webformDetailsToggle = {
+    attach: function (context) {
+      $('.js-webform-details-toggle', context).once('webform-details-toggle').each(function () {
+        var $form = $(this);
+        var $tabs = $form.find('.webform-tabs');
+
+        // Get only the main details elements and ignore all nested details.
+        var selector = ($tabs.length) ? '.webform-tab' : '.js-webform-details-toggle';
+        var $details = $form.find('details').filter(function () {
+          // @todo Figure out how to optimize the below code.
+          var $parents = $(this).parentsUntil(selector);
+          return ($parents.find('details').length === 0);
+        });
+
+        // Toggle is only useful when there are two or more details elements.
+        if ($details.length < 2) {
+          return;
+        }
+
+        var options = $.extend({
+          'button': '<button type="button" class="webform-details-toggle-state"></button>'
+        }, Drupal.webform.detailsToggle.options);
+
+        // Create toggle buttons.
+        var $toggle = $(options.button)
+          .attr('title', Drupal.t('Toggle details widget state.'))
+          .on('click', function (e) {
+            var open;
+            if (isFormDetailsOpen($form)) {
+              $form.find('details').removeAttr('open');
+              open = 0;
+            }
+            else {
+              $form.find('details').attr('open', 'open');
+              open = 1;
+            }
+            setDetailsToggleLabel($form);
+
+            // Set the saved states for all the details elements.
+            // @see webform.element.details.save.js
+            if (Drupal.webformDetailsSaveGetName) {
+              $form.find('details').each(function () {
+                var name = Drupal.webformDetailsSaveGetName($(this));
+                if (name) {
+                  localStorage.setItem(name, open);
+                }
+              });
+            }
+          })
+          .wrap('<div class="webform-details-toggle-state-wrapper"></div>')
+          .parent();
+
+        if ($tabs.length) {
+          // Add toggle state before the tabs.
+          $tabs.find('.item-list').before($toggle);
+        }
+        else {
+          // Add toggle state link to first details element.
+          $details.eq(0).before($toggle);
+        }
+
+        setDetailsToggleLabel($form);
+      });
+    }
+  };
+
+  /**
+   * Determine if a webform's details are all opened.
+   *
+   * @param {jQuery} $form
+   *   A webform.
+   *
+   * @return {boolean}
+   *   TRUE if a webform's details are all opened.
+   */
+  function isFormDetailsOpen($form) {
+    return ($form.find('details[open]').length === $form.find('details').length);
+  }
+
+  /**
+   * Set a webform's details toggle state widget label.
+   *
+   * @param {jQuery} $form
+   *   A webform.
+   */
+  function setDetailsToggleLabel($form) {
+    var isOpen = isFormDetailsOpen($form);
+
+    var label = (isOpen) ? Drupal.t('Collapse all') : Drupal.t('Expand all');
+    $form.find('.webform-details-toggle-state').html(label);
+
+    var text = (isOpen) ? Drupal.t('All details have been expanded.') : Drupal.t('All details have been collapsed.');
+    Drupal.announce(text);
+  }
+
+})(jQuery, Drupal);
+;
+/**
+ * @file
+ * JavaScript behaviors for details element.
+ */
+
+(function ($, Drupal) {
+
+  'use strict';
+
+  /**
+   * Attach handler to save details open/close state.
+   *
+   * @type {Drupal~behavior}
+   */
+  Drupal.behaviors.webformDetailsSave = {
+    attach: function (context) {
+      if (!window.localStorage) {
+        return;
+      }
+
+      // Summary click event handler.
+      $('details > summary', context).once('webform-details-summary-save').click(function () {
+        var $details = $(this).parent();
+
+
+        // @see https://css-tricks.com/snippets/jquery/make-an-jquery-hasattr/
+        if ($details[0].hasAttribute('data-webform-details-nosave')) {
+          return;
+        }
+
+        var name = Drupal.webformDetailsSaveGetName($details);
+        if (!name) {
+          return;
+        }
+
+        var open = ($details.attr('open') !== 'open') ? '1' : '0';
+        localStorage.setItem(name, open);
+      });
+
+      // Initialize details open state via local storage.
+      $('details', context).once('webform-details-save').each(function () {
+        var $details = $(this);
+
+        var name = Drupal.webformDetailsSaveGetName($details);
+        if (!name) {
+          return;
+        }
+
+        var open = localStorage.getItem(name);
+        if (open === null) {
+          return;
+        }
+
+        if (open === '1') {
+          $details.attr('open', 'open');
+        }
+        else {
+          $details.removeAttr('open');
+        }
+      });
+    }
+
+  };
+
+  /**
+   * Get the name used to store the state of details element.
+   *
+   * @param {jQuery} $details
+   *   A details element.
+   *
+   * @return string
+   *   The name used to store the state of details element.
+   */
+  Drupal.webformDetailsSaveGetName = function ($details) {
+    if (!window.localStorage) {
+      return '';
+    }
+
+    // Any details element not included a webform must have define its own id.
+    var webformId = $details.attr('data-webform-element-id');
+    if (webformId) {
+      return 'Drupal.webform.' + webformId.replace('--', '.');
+    }
+
+    var detailsId = $details.attr('id');
+    if (!detailsId) {
+      return '';
+    }
+
+    var $form = $details.parents('form');
+    if (!$form.length || !$form.attr('id')) {
+      return '';
+    }
+
+    var formId = $form.attr('id');
+    if (!formId) {
+      return '';
+    }
+
+    // ISSUE: When Drupal renders a webform in a modal dialog it appends a unique
+    // identifier to webform ids and details ids. (i.e. my-form--FeSFISegTUI)
+    // WORKAROUND: Remove the unique id that delimited using double dashes.
+    formId = formId.replace(/--.+?$/, '').replace(/-/g, '_');
+    detailsId = detailsId.replace(/--.+?$/, '').replace(/-/g, '_');
+    return 'Drupal.webform.' + formId + '.' + detailsId;
+  }
+
+})(jQuery, Drupal);
+;
+/**
+* DO NOT EDIT THIS FILE.
+* See the following change record for more information,
+* https://www.drupal.org/node/2815083
+* @preserve
+**/
+
+(function ($, Drupal) {
+  Drupal.theme.progressBar = function (id) {
+    return '<div id="' + id + '" class="progress" aria-live="polite">' + '<div class="progress__label">&nbsp;</div>' + '<div class="progress__track"><div class="progress__bar"></div></div>' + '<div class="progress__percentage"></div>' + '<div class="progress__description">&nbsp;</div>' + '</div>';
+  };
+
+  Drupal.ProgressBar = function (id, updateCallback, method, errorCallback) {
+    this.id = id;
+    this.method = method || 'GET';
+    this.updateCallback = updateCallback;
+    this.errorCallback = errorCallback;
+
+    this.element = $(Drupal.theme('progressBar', id));
+  };
+
+  $.extend(Drupal.ProgressBar.prototype, {
+    setProgress: function setProgress(percentage, message, label) {
+      if (percentage >= 0 && percentage <= 100) {
+        $(this.element).find('div.progress__bar').css('width', percentage + '%');
+        $(this.element).find('div.progress__percentage').html(percentage + '%');
+      }
+      $('div.progress__description', this.element).html(message);
+      $('div.progress__label', this.element).html(label);
+      if (this.updateCallback) {
+        this.updateCallback(percentage, message, this);
+      }
+    },
+    startMonitoring: function startMonitoring(uri, delay) {
+      this.delay = delay;
+      this.uri = uri;
+      this.sendPing();
+    },
+    stopMonitoring: function stopMonitoring() {
+      clearTimeout(this.timer);
+
+      this.uri = null;
+    },
+    sendPing: function sendPing() {
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
+      if (this.uri) {
+        var pb = this;
+
+        var uri = this.uri;
+        if (uri.indexOf('?') === -1) {
+          uri += '?';
+        } else {
+          uri += '&';
+        }
+        uri += '_format=json';
+        $.ajax({
+          type: this.method,
+          url: uri,
+          data: '',
+          dataType: 'json',
+          success: function success(progress) {
+            if (progress.status === 0) {
+              pb.displayError(progress.data);
+              return;
+            }
+
+            pb.setProgress(progress.percentage, progress.message, progress.label);
+
+            pb.timer = setTimeout(function () {
+              pb.sendPing();
+            }, pb.delay);
+          },
+          error: function error(xmlhttp) {
+            var e = new Drupal.AjaxError(xmlhttp, pb.uri);
+            pb.displayError('<pre>' + e.message + '</pre>');
+          }
+        });
+      }
+    },
+    displayError: function displayError(string) {
+      var error = $('<div class="messages messages--error"></div>').html(string);
+      $(this.element).before(error).hide();
+
+      if (this.errorCallback) {
+        this.errorCallback(this);
+      }
+    }
+  });
+})(jQuery, Drupal);;
+/**
+* DO NOT EDIT THIS FILE.
+* See the following change record for more information,
+* https://www.drupal.org/node/2815083
+* @preserve
+**/
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+(function ($, window, Drupal, drupalSettings) {
+  Drupal.behaviors.AJAX = {
+    attach: function attach(context, settings) {
+      function loadAjaxBehavior(base) {
+        var elementSettings = settings.ajax[base];
+        if (typeof elementSettings.selector === 'undefined') {
+          elementSettings.selector = '#' + base;
+        }
+        $(elementSettings.selector).once('drupal-ajax').each(function () {
+          elementSettings.element = this;
+          elementSettings.base = base;
+          Drupal.ajax(elementSettings);
+        });
+      }
+
+      Object.keys(settings.ajax || {}).forEach(function (base) {
+        return loadAjaxBehavior(base);
+      });
+
+      Drupal.ajax.bindAjaxLinks(document.body);
+
+      $('.use-ajax-submit').once('ajax').each(function () {
+        var elementSettings = {};
+
+        elementSettings.url = $(this.form).attr('action');
+
+        elementSettings.setClick = true;
+
+        elementSettings.event = 'click';
+
+        elementSettings.progress = { type: 'throbber' };
+        elementSettings.base = $(this).attr('id');
+        elementSettings.element = this;
+
+        Drupal.ajax(elementSettings);
+      });
+    },
+    detach: function detach(context, settings, trigger) {
+      if (trigger === 'unload') {
+        Drupal.ajax.expired().forEach(function (instance) {
+          Drupal.ajax.instances[instance.instanceIndex] = null;
+        });
+      }
+    }
+  };
+
+  Drupal.AjaxError = function (xmlhttp, uri, customMessage) {
+    var statusCode = void 0;
+    var statusText = void 0;
+    var responseText = void 0;
+    if (xmlhttp.status) {
+      statusCode = '\n' + Drupal.t('An AJAX HTTP error occurred.') + '\n' + Drupal.t('HTTP Result Code: !status', { '!status': xmlhttp.status });
+    } else {
+      statusCode = '\n' + Drupal.t('An AJAX HTTP request terminated abnormally.');
+    }
+    statusCode += '\n' + Drupal.t('Debugging information follows.');
+    var pathText = '\n' + Drupal.t('Path: !uri', { '!uri': uri });
+    statusText = '';
+
+    try {
+      statusText = '\n' + Drupal.t('StatusText: !statusText', {
+        '!statusText': $.trim(xmlhttp.statusText)
+      });
+    } catch (e) {}
+
+    responseText = '';
+
+    try {
+      responseText = '\n' + Drupal.t('ResponseText: !responseText', {
+        '!responseText': $.trim(xmlhttp.responseText)
+      });
+    } catch (e) {}
+
+    responseText = responseText.replace(/<("[^"]*"|'[^']*'|[^'">])*>/gi, '');
+    responseText = responseText.replace(/[\n]+\s+/g, '\n');
+
+    var readyStateText = xmlhttp.status === 0 ? '\n' + Drupal.t('ReadyState: !readyState', {
+      '!readyState': xmlhttp.readyState
+    }) : '';
+
+    customMessage = customMessage ? '\n' + Drupal.t('CustomMessage: !customMessage', {
+      '!customMessage': customMessage
+    }) : '';
+
+    this.message = statusCode + pathText + statusText + customMessage + responseText + readyStateText;
+
+    this.name = 'AjaxError';
+  };
+
+  Drupal.AjaxError.prototype = new Error();
+  Drupal.AjaxError.prototype.constructor = Drupal.AjaxError;
+
+  Drupal.ajax = function (settings) {
+    if (arguments.length !== 1) {
+      throw new Error('Drupal.ajax() function must be called with one configuration object only');
+    }
+
+    var base = settings.base || false;
+    var element = settings.element || false;
+    delete settings.base;
+    delete settings.element;
+
+    if (!settings.progress && !element) {
+      settings.progress = false;
+    }
+
+    var ajax = new Drupal.Ajax(base, element, settings);
+    ajax.instanceIndex = Drupal.ajax.instances.length;
+    Drupal.ajax.instances.push(ajax);
+
+    return ajax;
+  };
+
+  Drupal.ajax.instances = [];
+
+  Drupal.ajax.expired = function () {
+    return Drupal.ajax.instances.filter(function (instance) {
+      return instance && instance.element !== false && !document.body.contains(instance.element);
+    });
+  };
+
+  Drupal.ajax.bindAjaxLinks = function (element) {
+    $(element).find('.use-ajax').once('ajax').each(function (i, ajaxLink) {
+      var $linkElement = $(ajaxLink);
+
+      var elementSettings = {
+        progress: { type: 'throbber' },
+        dialogType: $linkElement.data('dialog-type'),
+        dialog: $linkElement.data('dialog-options'),
+        dialogRenderer: $linkElement.data('dialog-renderer'),
+        base: $linkElement.attr('id'),
+        element: ajaxLink
+      };
+      var href = $linkElement.attr('href');
+
+      if (href) {
+        elementSettings.url = href;
+        elementSettings.event = 'click';
+      }
+      Drupal.ajax(elementSettings);
+    });
+  };
+
+  Drupal.Ajax = function (base, element, elementSettings) {
+    var defaults = {
+      event: element ? 'mousedown' : null,
+      keypress: true,
+      selector: base ? '#' + base : null,
+      effect: 'none',
+      speed: 'none',
+      method: 'replaceWith',
+      progress: {
+        type: 'throbber',
+        message: Drupal.t('Please wait...')
+      },
+      submit: {
+        js: true
+      }
+    };
+
+    $.extend(this, defaults, elementSettings);
+
+    this.commands = new Drupal.AjaxCommands();
+
+    this.instanceIndex = false;
+
+    if (this.wrapper) {
+      this.wrapper = '#' + this.wrapper;
+    }
+
+    this.element = element;
+
+    this.element_settings = elementSettings;
+
+    this.elementSettings = elementSettings;
+
+    if (this.element && this.element.form) {
+      this.$form = $(this.element.form);
+    }
+
+    if (!this.url) {
+      var $element = $(this.element);
+      if ($element.is('a')) {
+        this.url = $element.attr('href');
+      } else if (this.element && element.form) {
+        this.url = this.$form.attr('action');
+      }
+    }
+
+    var originalUrl = this.url;
+
+    this.url = this.url.replace(/\/nojs(\/|$|\?|#)/, '/ajax$1');
+
+    if (drupalSettings.ajaxTrustedUrl[originalUrl]) {
+      drupalSettings.ajaxTrustedUrl[this.url] = true;
+    }
+
+    var ajax = this;
+
+    ajax.options = {
+      url: ajax.url,
+      data: ajax.submit,
+      beforeSerialize: function beforeSerialize(elementSettings, options) {
+        return ajax.beforeSerialize(elementSettings, options);
+      },
+      beforeSubmit: function beforeSubmit(formValues, elementSettings, options) {
+        ajax.ajaxing = true;
+        return ajax.beforeSubmit(formValues, elementSettings, options);
+      },
+      beforeSend: function beforeSend(xmlhttprequest, options) {
+        ajax.ajaxing = true;
+        return ajax.beforeSend(xmlhttprequest, options);
+      },
+      success: function success(response, status, xmlhttprequest) {
+        if (typeof response === 'string') {
+          response = $.parseJSON(response);
+        }
+
+        if (response !== null && !drupalSettings.ajaxTrustedUrl[ajax.url]) {
+          if (xmlhttprequest.getResponseHeader('X-Drupal-Ajax-Token') !== '1') {
+            var customMessage = Drupal.t('The response failed verification so will not be processed.');
+            return ajax.error(xmlhttprequest, ajax.url, customMessage);
+          }
+        }
+
+        return ajax.success(response, status);
+      },
+      complete: function complete(xmlhttprequest, status) {
+        ajax.ajaxing = false;
+        if (status === 'error' || status === 'parsererror') {
+          return ajax.error(xmlhttprequest, ajax.url);
+        }
+      },
+
+      dataType: 'json',
+      type: 'POST'
+    };
+
+    if (elementSettings.dialog) {
+      ajax.options.data.dialogOptions = elementSettings.dialog;
+    }
+
+    if (ajax.options.url.indexOf('?') === -1) {
+      ajax.options.url += '?';
+    } else {
+      ajax.options.url += '&';
+    }
+
+    var wrapper = 'drupal_' + (elementSettings.dialogType || 'ajax');
+    if (elementSettings.dialogRenderer) {
+      wrapper += '.' + elementSettings.dialogRenderer;
+    }
+    ajax.options.url += Drupal.ajax.WRAPPER_FORMAT + '=' + wrapper;
+
+    $(ajax.element).on(elementSettings.event, function (event) {
+      if (!drupalSettings.ajaxTrustedUrl[ajax.url] && !Drupal.url.isLocal(ajax.url)) {
+        throw new Error(Drupal.t('The callback URL is not local and not trusted: !url', {
+          '!url': ajax.url
+        }));
+      }
+      return ajax.eventResponse(this, event);
+    });
+
+    if (elementSettings.keypress) {
+      $(ajax.element).on('keypress', function (event) {
+        return ajax.keypressResponse(this, event);
+      });
+    }
+
+    if (elementSettings.prevent) {
+      $(ajax.element).on(elementSettings.prevent, false);
+    }
+  };
+
+  Drupal.ajax.WRAPPER_FORMAT = '_wrapper_format';
+
+  Drupal.Ajax.AJAX_REQUEST_PARAMETER = '_drupal_ajax';
+
+  Drupal.Ajax.prototype.execute = function () {
+    if (this.ajaxing) {
+      return;
+    }
+
+    try {
+      this.beforeSerialize(this.element, this.options);
+
+      return $.ajax(this.options);
+    } catch (e) {
+      this.ajaxing = false;
+      window.alert('An error occurred while attempting to process ' + this.options.url + ': ' + e.message);
+
+      return $.Deferred().reject();
+    }
+  };
+
+  Drupal.Ajax.prototype.keypressResponse = function (element, event) {
+    var ajax = this;
+
+    if (event.which === 13 || event.which === 32 && element.type !== 'text' && element.type !== 'textarea' && element.type !== 'tel' && element.type !== 'number') {
+      event.preventDefault();
+      event.stopPropagation();
+      $(element).trigger(ajax.elementSettings.event);
+    }
+  };
+
+  Drupal.Ajax.prototype.eventResponse = function (element, event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    var ajax = this;
+
+    if (ajax.ajaxing) {
+      return;
+    }
+
+    try {
+      if (ajax.$form) {
+        if (ajax.setClick) {
+          element.form.clk = element;
+        }
+
+        ajax.$form.ajaxSubmit(ajax.options);
+      } else {
+        ajax.beforeSerialize(ajax.element, ajax.options);
+        $.ajax(ajax.options);
+      }
+    } catch (e) {
+      ajax.ajaxing = false;
+      window.alert('An error occurred while attempting to process ' + ajax.options.url + ': ' + e.message);
+    }
+  };
+
+  Drupal.Ajax.prototype.beforeSerialize = function (element, options) {
+    if (this.$form) {
+      var settings = this.settings || drupalSettings;
+      Drupal.detachBehaviors(this.$form.get(0), settings, 'serialize');
+    }
+
+    options.data[Drupal.Ajax.AJAX_REQUEST_PARAMETER] = 1;
+
+    var pageState = drupalSettings.ajaxPageState;
+    options.data['ajax_page_state[theme]'] = pageState.theme;
+    options.data['ajax_page_state[theme_token]'] = pageState.theme_token;
+    options.data['ajax_page_state[libraries]'] = pageState.libraries;
+  };
+
+  Drupal.Ajax.prototype.beforeSubmit = function (formValues, element, options) {};
+
+  Drupal.Ajax.prototype.beforeSend = function (xmlhttprequest, options) {
+    if (this.$form) {
+      options.extraData = options.extraData || {};
+
+      options.extraData.ajax_iframe_upload = '1';
+
+      var v = $.fieldValue(this.element);
+      if (v !== null) {
+        options.extraData[this.element.name] = v;
+      }
+    }
+
+    $(this.element).prop('disabled', true);
+
+    if (!this.progress || !this.progress.type) {
+      return;
+    }
+
+    var progressIndicatorMethod = 'setProgressIndicator' + this.progress.type.slice(0, 1).toUpperCase() + this.progress.type.slice(1).toLowerCase();
+    if (progressIndicatorMethod in this && typeof this[progressIndicatorMethod] === 'function') {
+      this[progressIndicatorMethod].call(this);
+    }
+  };
+
+  Drupal.theme.ajaxProgressThrobber = function (message) {
+    var messageMarkup = typeof message === 'string' ? Drupal.theme('ajaxProgressMessage', message) : '';
+    var throbber = '<div class="throbber">&nbsp;</div>';
+
+    return '<div class="ajax-progress ajax-progress-throbber">' + throbber + messageMarkup + '</div>';
+  };
+
+  Drupal.theme.ajaxProgressIndicatorFullscreen = function () {
+    return '<div class="ajax-progress ajax-progress-fullscreen">&nbsp;</div>';
+  };
+
+  Drupal.theme.ajaxProgressMessage = function (message) {
+    return '<div class="message">' + message + '</div>';
+  };
+
+  Drupal.Ajax.prototype.setProgressIndicatorBar = function () {
+    var progressBar = new Drupal.ProgressBar('ajax-progress-' + this.element.id, $.noop, this.progress.method, $.noop);
+    if (this.progress.message) {
+      progressBar.setProgress(-1, this.progress.message);
+    }
+    if (this.progress.url) {
+      progressBar.startMonitoring(this.progress.url, this.progress.interval || 1500);
+    }
+    this.progress.element = $(progressBar.element).addClass('ajax-progress ajax-progress-bar');
+    this.progress.object = progressBar;
+    $(this.element).after(this.progress.element);
+  };
+
+  Drupal.Ajax.prototype.setProgressIndicatorThrobber = function () {
+    this.progress.element = $(Drupal.theme('ajaxProgressThrobber', this.progress.message));
+    $(this.element).after(this.progress.element);
+  };
+
+  Drupal.Ajax.prototype.setProgressIndicatorFullscreen = function () {
+    this.progress.element = $(Drupal.theme('ajaxProgressIndicatorFullscreen'));
+    $('body').after(this.progress.element);
+  };
+
+  Drupal.Ajax.prototype.success = function (response, status) {
+    var _this = this;
+
+    if (this.progress.element) {
+      $(this.progress.element).remove();
+    }
+    if (this.progress.object) {
+      this.progress.object.stopMonitoring();
+    }
+    $(this.element).prop('disabled', false);
+
+    var elementParents = $(this.element).parents('[data-drupal-selector]').addBack().toArray();
+
+    var focusChanged = false;
+    Object.keys(response || {}).forEach(function (i) {
+      if (response[i].command && _this.commands[response[i].command]) {
+        _this.commands[response[i].command](_this, response[i], status);
+        if (response[i].command === 'invoke' && response[i].method === 'focus') {
+          focusChanged = true;
+        }
+      }
+    });
+
+    if (!focusChanged && this.element && !$(this.element).data('disable-refocus')) {
+      var target = false;
+
+      for (var n = elementParents.length - 1; !target && n >= 0; n--) {
+        target = document.querySelector('[data-drupal-selector="' + elementParents[n].getAttribute('data-drupal-selector') + '"]');
+      }
+
+      if (target) {
+        $(target).trigger('focus');
+      }
+    }
+
+    if (this.$form) {
+      var settings = this.settings || drupalSettings;
+      Drupal.attachBehaviors(this.$form.get(0), settings);
+    }
+
+    this.settings = null;
+  };
+
+  Drupal.Ajax.prototype.getEffect = function (response) {
+    var type = response.effect || this.effect;
+    var speed = response.speed || this.speed;
+
+    var effect = {};
+    if (type === 'none') {
+      effect.showEffect = 'show';
+      effect.hideEffect = 'hide';
+      effect.showSpeed = '';
+    } else if (type === 'fade') {
+      effect.showEffect = 'fadeIn';
+      effect.hideEffect = 'fadeOut';
+      effect.showSpeed = speed;
+    } else {
+      effect.showEffect = type + 'Toggle';
+      effect.hideEffect = type + 'Toggle';
+      effect.showSpeed = speed;
+    }
+
+    return effect;
+  };
+
+  Drupal.Ajax.prototype.error = function (xmlhttprequest, uri, customMessage) {
+    if (this.progress.element) {
+      $(this.progress.element).remove();
+    }
+    if (this.progress.object) {
+      this.progress.object.stopMonitoring();
+    }
+
+    $(this.wrapper).show();
+
+    $(this.element).prop('disabled', false);
+
+    if (this.$form) {
+      var settings = this.settings || drupalSettings;
+      Drupal.attachBehaviors(this.$form.get(0), settings);
+    }
+    throw new Drupal.AjaxError(xmlhttprequest, uri, customMessage);
+  };
+
+  Drupal.theme.ajaxWrapperNewContent = function ($newContent, ajax, response) {
+    return (response.effect || ajax.effect) !== 'none' && $newContent.filter(function (i) {
+      return !($newContent[i].nodeName === '#comment' || $newContent[i].nodeName === '#text' && /^(\s|\n|\r)*$/.test($newContent[i].textContent));
+    }).length > 1 ? Drupal.theme('ajaxWrapperMultipleRootElements', $newContent) : $newContent;
+  };
+
+  Drupal.theme.ajaxWrapperMultipleRootElements = function ($elements) {
+    return $('<div></div>').append($elements);
+  };
+
+  Drupal.AjaxCommands = function () {};
+  Drupal.AjaxCommands.prototype = {
+    insert: function insert(ajax, response) {
+      var $wrapper = response.selector ? $(response.selector) : $(ajax.wrapper);
+      var method = response.method || ajax.method;
+      var effect = ajax.getEffect(response);
+
+      var settings = response.settings || ajax.settings || drupalSettings;
+
+      var $newContent = $($.parseHTML(response.data, document, true));
+
+      $newContent = Drupal.theme('ajaxWrapperNewContent', $newContent, ajax, response);
+
+      switch (method) {
+        case 'html':
+        case 'replaceWith':
+        case 'replaceAll':
+        case 'empty':
+        case 'remove':
+          Drupal.detachBehaviors($wrapper.get(0), settings);
+          break;
+        default:
+          break;
+      }
+
+      $wrapper[method]($newContent);
+
+      if (effect.showEffect !== 'show') {
+        $newContent.hide();
+      }
+
+      var $ajaxNewContent = $newContent.find('.ajax-new-content');
+      if ($ajaxNewContent.length) {
+        $ajaxNewContent.hide();
+        $newContent.show();
+        $ajaxNewContent[effect.showEffect](effect.showSpeed);
+      } else if (effect.showEffect !== 'show') {
+        $newContent[effect.showEffect](effect.showSpeed);
+      }
+
+      if ($newContent.parents('html').length) {
+        $newContent.each(function (index, element) {
+          if (element.nodeType === Node.ELEMENT_NODE) {
+            Drupal.attachBehaviors(element, settings);
+          }
+        });
+      }
+    },
+    remove: function remove(ajax, response, status) {
+      var settings = response.settings || ajax.settings || drupalSettings;
+      $(response.selector).each(function () {
+        Drupal.detachBehaviors(this, settings);
+      }).remove();
+    },
+    changed: function changed(ajax, response, status) {
+      var $element = $(response.selector);
+      if (!$element.hasClass('ajax-changed')) {
+        $element.addClass('ajax-changed');
+        if (response.asterisk) {
+          $element.find(response.asterisk).append(' <abbr class="ajax-changed" title="' + Drupal.t('Changed') + '">*</abbr> ');
+        }
+      }
+    },
+    alert: function alert(ajax, response, status) {
+      window.alert(response.text, response.title);
+    },
+    redirect: function redirect(ajax, response, status) {
+      window.location = response.url;
+    },
+    css: function css(ajax, response, status) {
+      $(response.selector).css(response.argument);
+    },
+    settings: function settings(ajax, response, status) {
+      var ajaxSettings = drupalSettings.ajax;
+
+      if (ajaxSettings) {
+        Drupal.ajax.expired().forEach(function (instance) {
+
+          if (instance.selector) {
+            var selector = instance.selector.replace('#', '');
+            if (selector in ajaxSettings) {
+              delete ajaxSettings[selector];
+            }
+          }
+        });
+      }
+
+      if (response.merge) {
+        $.extend(true, drupalSettings, response.settings);
+      } else {
+        ajax.settings = response.settings;
+      }
+    },
+    data: function data(ajax, response, status) {
+      $(response.selector).data(response.name, response.value);
+    },
+    invoke: function invoke(ajax, response, status) {
+      var $element = $(response.selector);
+      $element[response.method].apply($element, _toConsumableArray(response.args));
+    },
+    restripe: function restripe(ajax, response, status) {
+      $(response.selector).find('> tbody > tr:visible, > tr:visible').removeClass('odd even').filter(':even').addClass('odd').end().filter(':odd').addClass('even');
+    },
+    update_build_id: function update_build_id(ajax, response, status) {
+      $('input[name="form_build_id"][value="' + response.old + '"]').val(response.new);
+    },
+    add_css: function add_css(ajax, response, status) {
+      $('head').prepend(response.data);
+
+      var match = void 0;
+      var importMatch = /^@import url\("(.*)"\);$/gim;
+      if (document.styleSheets[0].addImport && importMatch.test(response.data)) {
+        importMatch.lastIndex = 0;
+        do {
+          match = importMatch.exec(response.data);
+          document.styleSheets[0].addImport(match[1]);
+        } while (match);
+      }
+    }
+  };
+})(jQuery, window, Drupal, drupalSettings);;
+/*!
+ * jQuery Form Plugin
+ * version: 4.2.2
+ * Requires jQuery v1.7.2 or later
+ * Project repository: https://github.com/jquery-form/form
+
+ * Copyright 2017 Kevin Morris
+ * Copyright 2006 M. Alsup
+
+ * Dual licensed under the LGPL-2.1+ or MIT licenses
+ * https://github.com/jquery-form/form#license
+
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ */
+!function(e){"function"==typeof define&&define.amd?define(["jquery"],e):"object"==typeof module&&module.exports?module.exports=function(t,r){return void 0===r&&(r="undefined"!=typeof window?require("jquery"):require("jquery")(t)),e(r),r}:e(jQuery)}(function(e){"use strict";function t(t){var r=t.data;t.isDefaultPrevented()||(t.preventDefault(),e(t.target).closest("form").ajaxSubmit(r))}function r(t){var r=t.target,a=e(r);if(!a.is("[type=submit],[type=image]")){var n=a.closest("[type=submit]");if(0===n.length)return;r=n[0]}var i=r.form;if(i.clk=r,"image"===r.type)if(void 0!==t.offsetX)i.clk_x=t.offsetX,i.clk_y=t.offsetY;else if("function"==typeof e.fn.offset){var o=a.offset();i.clk_x=t.pageX-o.left,i.clk_y=t.pageY-o.top}else i.clk_x=t.pageX-r.offsetLeft,i.clk_y=t.pageY-r.offsetTop;setTimeout(function(){i.clk=i.clk_x=i.clk_y=null},100)}function a(){if(e.fn.ajaxSubmit.debug){var t="[jquery.form] "+Array.prototype.join.call(arguments,"");window.console&&window.console.log?window.console.log(t):window.opera&&window.opera.postError&&window.opera.postError(t)}}var n=/\r?\n/g,i={};i.fileapi=void 0!==e('<input type="file">').get(0).files,i.formdata=void 0!==window.FormData;var o=!!e.fn.prop;e.fn.attr2=function(){if(!o)return this.attr.apply(this,arguments);var e=this.prop.apply(this,arguments);return e&&e.jquery||"string"==typeof e?e:this.attr.apply(this,arguments)},e.fn.ajaxSubmit=function(t,r,n,s){function u(r){var a,n,i=e.param(r,t.traditional).split("&"),o=i.length,s=[];for(a=0;a<o;a++)i[a]=i[a].replace(/\+/g," "),n=i[a].split("="),s.push([decodeURIComponent(n[0]),decodeURIComponent(n[1])]);return s}function c(r){function n(e){var t=null;try{e.contentWindow&&(t=e.contentWindow.document)}catch(e){a("cannot get iframe.contentWindow document: "+e)}if(t)return t;try{t=e.contentDocument?e.contentDocument:e.document}catch(r){a("cannot get iframe.contentDocument: "+r),t=e.document}return t}function i(){function t(){try{var e=n(v).readyState;a("state = "+e),e&&"uninitialized"===e.toLowerCase()&&setTimeout(t,50)}catch(e){a("Server abort: ",e," (",e.name,")"),s(L),j&&clearTimeout(j),j=void 0}}var r=p.attr2("target"),i=p.attr2("action"),o=p.attr("enctype")||p.attr("encoding")||"multipart/form-data";w.setAttribute("target",m),l&&!/post/i.test(l)||w.setAttribute("method","POST"),i!==f.url&&w.setAttribute("action",f.url),f.skipEncodingOverride||l&&!/post/i.test(l)||p.attr({encoding:"multipart/form-data",enctype:"multipart/form-data"}),f.timeout&&(j=setTimeout(function(){T=!0,s(A)},f.timeout));var u=[];try{if(f.extraData)for(var c in f.extraData)f.extraData.hasOwnProperty(c)&&(e.isPlainObject(f.extraData[c])&&f.extraData[c].hasOwnProperty("name")&&f.extraData[c].hasOwnProperty("value")?u.push(e('<input type="hidden" name="'+f.extraData[c].name+'">',k).val(f.extraData[c].value).appendTo(w)[0]):u.push(e('<input type="hidden" name="'+c+'">',k).val(f.extraData[c]).appendTo(w)[0]));f.iframeTarget||h.appendTo(D),v.attachEvent?v.attachEvent("onload",s):v.addEventListener("load",s,!1),setTimeout(t,15);try{w.submit()}catch(e){document.createElement("form").submit.apply(w)}}finally{w.setAttribute("action",i),w.setAttribute("enctype",o),r?w.setAttribute("target",r):p.removeAttr("target"),e(u).remove()}}function s(t){if(!x.aborted&&!X){if((O=n(v))||(a("cannot access response document"),t=L),t===A&&x)return x.abort("timeout"),void S.reject(x,"timeout");if(t===L&&x)return x.abort("server abort"),void S.reject(x,"error","server abort");if(O&&O.location.href!==f.iframeSrc||T){v.detachEvent?v.detachEvent("onload",s):v.removeEventListener("load",s,!1);var r,i="success";try{if(T)throw"timeout";var o="xml"===f.dataType||O.XMLDocument||e.isXMLDoc(O);if(a("isXml="+o),!o&&window.opera&&(null===O.body||!O.body.innerHTML)&&--C)return a("requeing onLoad callback, DOM not available"),void setTimeout(s,250);var u=O.body?O.body:O.documentElement;x.responseText=u?u.innerHTML:null,x.responseXML=O.XMLDocument?O.XMLDocument:O,o&&(f.dataType="xml"),x.getResponseHeader=function(e){return{"content-type":f.dataType}[e.toLowerCase()]},u&&(x.status=Number(u.getAttribute("status"))||x.status,x.statusText=u.getAttribute("statusText")||x.statusText);var c=(f.dataType||"").toLowerCase(),l=/(json|script|text)/.test(c);if(l||f.textarea){var p=O.getElementsByTagName("textarea")[0];if(p)x.responseText=p.value,x.status=Number(p.getAttribute("status"))||x.status,x.statusText=p.getAttribute("statusText")||x.statusText;else if(l){var m=O.getElementsByTagName("pre")[0],g=O.getElementsByTagName("body")[0];m?x.responseText=m.textContent?m.textContent:m.innerText:g&&(x.responseText=g.textContent?g.textContent:g.innerText)}}else"xml"===c&&!x.responseXML&&x.responseText&&(x.responseXML=q(x.responseText));try{M=N(x,c,f)}catch(e){i="parsererror",x.error=r=e||i}}catch(e){a("error caught: ",e),i="error",x.error=r=e||i}x.aborted&&(a("upload aborted"),i=null),x.status&&(i=x.status>=200&&x.status<300||304===x.status?"success":"error"),"success"===i?(f.success&&f.success.call(f.context,M,"success",x),S.resolve(x.responseText,"success",x),d&&e.event.trigger("ajaxSuccess",[x,f])):i&&(void 0===r&&(r=x.statusText),f.error&&f.error.call(f.context,x,i,r),S.reject(x,"error",r),d&&e.event.trigger("ajaxError",[x,f,r])),d&&e.event.trigger("ajaxComplete",[x,f]),d&&!--e.active&&e.event.trigger("ajaxStop"),f.complete&&f.complete.call(f.context,x,i),X=!0,f.timeout&&clearTimeout(j),setTimeout(function(){f.iframeTarget?h.attr("src",f.iframeSrc):h.remove(),x.responseXML=null},100)}}}var u,c,f,d,m,h,v,x,y,b,T,j,w=p[0],S=e.Deferred();if(S.abort=function(e){x.abort(e)},r)for(c=0;c<g.length;c++)u=e(g[c]),o?u.prop("disabled",!1):u.removeAttr("disabled");(f=e.extend(!0,{},e.ajaxSettings,t)).context=f.context||f,m="jqFormIO"+(new Date).getTime();var k=w.ownerDocument,D=p.closest("body");if(f.iframeTarget?(b=(h=e(f.iframeTarget,k)).attr2("name"))?m=b:h.attr2("name",m):(h=e('<iframe name="'+m+'" src="'+f.iframeSrc+'" />',k)).css({position:"absolute",top:"-1000px",left:"-1000px"}),v=h[0],x={aborted:0,responseText:null,responseXML:null,status:0,statusText:"n/a",getAllResponseHeaders:function(){},getResponseHeader:function(){},setRequestHeader:function(){},abort:function(t){var r="timeout"===t?"timeout":"aborted";a("aborting upload... "+r),this.aborted=1;try{v.contentWindow.document.execCommand&&v.contentWindow.document.execCommand("Stop")}catch(e){}h.attr("src",f.iframeSrc),x.error=r,f.error&&f.error.call(f.context,x,r,t),d&&e.event.trigger("ajaxError",[x,f,r]),f.complete&&f.complete.call(f.context,x,r)}},(d=f.global)&&0==e.active++&&e.event.trigger("ajaxStart"),d&&e.event.trigger("ajaxSend",[x,f]),f.beforeSend&&!1===f.beforeSend.call(f.context,x,f))return f.global&&e.active--,S.reject(),S;if(x.aborted)return S.reject(),S;(y=w.clk)&&(b=y.name)&&!y.disabled&&(f.extraData=f.extraData||{},f.extraData[b]=y.value,"image"===y.type&&(f.extraData[b+".x"]=w.clk_x,f.extraData[b+".y"]=w.clk_y));var A=1,L=2,F=e("meta[name=csrf-token]").attr("content"),E=e("meta[name=csrf-param]").attr("content");E&&F&&(f.extraData=f.extraData||{},f.extraData[E]=F),f.forceSync?i():setTimeout(i,10);var M,O,X,C=50,q=e.parseXML||function(e,t){return window.ActiveXObject?((t=new ActiveXObject("Microsoft.XMLDOM")).async="false",t.loadXML(e)):t=(new DOMParser).parseFromString(e,"text/xml"),t&&t.documentElement&&"parsererror"!==t.documentElement.nodeName?t:null},_=e.parseJSON||function(e){return window.eval("("+e+")")},N=function(t,r,a){var n=t.getResponseHeader("content-type")||"",i=("xml"===r||!r)&&n.indexOf("xml")>=0,o=i?t.responseXML:t.responseText;return i&&"parsererror"===o.documentElement.nodeName&&e.error&&e.error("parsererror"),a&&a.dataFilter&&(o=a.dataFilter(o,r)),"string"==typeof o&&(("json"===r||!r)&&n.indexOf("json")>=0?o=_(o):("script"===r||!r)&&n.indexOf("javascript")>=0&&e.globalEval(o)),o};return S}if(!this.length)return a("ajaxSubmit: skipping submit process - no element selected"),this;var l,f,d,p=this;"function"==typeof t?t={success:t}:"string"==typeof t||!1===t&&arguments.length>0?(t={url:t,data:r,dataType:n},"function"==typeof s&&(t.success=s)):void 0===t&&(t={}),l=t.method||t.type||this.attr2("method"),(d=(d="string"==typeof(f=t.url||this.attr2("action"))?e.trim(f):"")||window.location.href||"")&&(d=(d.match(/^([^#]+)/)||[])[1]),t=e.extend(!0,{url:d,success:e.ajaxSettings.success,type:l||e.ajaxSettings.type,iframeSrc:/^https/i.test(window.location.href||"")?"javascript:false":"about:blank"},t);var m={};if(this.trigger("form-pre-serialize",[this,t,m]),m.veto)return a("ajaxSubmit: submit vetoed via form-pre-serialize trigger"),this;if(t.beforeSerialize&&!1===t.beforeSerialize(this,t))return a("ajaxSubmit: submit aborted via beforeSerialize callback"),this;var h=t.traditional;void 0===h&&(h=e.ajaxSettings.traditional);var v,g=[],x=this.formToArray(t.semantic,g,t.filtering);if(t.data){var y=e.isFunction(t.data)?t.data(x):t.data;t.extraData=y,v=e.param(y,h)}if(t.beforeSubmit&&!1===t.beforeSubmit(x,this,t))return a("ajaxSubmit: submit aborted via beforeSubmit callback"),this;if(this.trigger("form-submit-validate",[x,this,t,m]),m.veto)return a("ajaxSubmit: submit vetoed via form-submit-validate trigger"),this;var b=e.param(x,h);v&&(b=b?b+"&"+v:v),"GET"===t.type.toUpperCase()?(t.url+=(t.url.indexOf("?")>=0?"&":"?")+b,t.data=null):t.data=b;var T=[];if(t.resetForm&&T.push(function(){p.resetForm()}),t.clearForm&&T.push(function(){p.clearForm(t.includeHidden)}),!t.dataType&&t.target){var j=t.success||function(){};T.push(function(r,a,n){var i=arguments,o=t.replaceTarget?"replaceWith":"html";e(t.target)[o](r).each(function(){j.apply(this,i)})})}else t.success&&(e.isArray(t.success)?e.merge(T,t.success):T.push(t.success));if(t.success=function(e,r,a){for(var n=t.context||this,i=0,o=T.length;i<o;i++)T[i].apply(n,[e,r,a||p,p])},t.error){var w=t.error;t.error=function(e,r,a){var n=t.context||this;w.apply(n,[e,r,a,p])}}if(t.complete){var S=t.complete;t.complete=function(e,r){var a=t.context||this;S.apply(a,[e,r,p])}}var k=e("input[type=file]:enabled",this).filter(function(){return""!==e(this).val()}).length>0,D="multipart/form-data",A=p.attr("enctype")===D||p.attr("encoding")===D,L=i.fileapi&&i.formdata;a("fileAPI :"+L);var F,E=(k||A)&&!L;!1!==t.iframe&&(t.iframe||E)?t.closeKeepAlive?e.get(t.closeKeepAlive,function(){F=c(x)}):F=c(x):F=(k||A)&&L?function(r){for(var a=new FormData,n=0;n<r.length;n++)a.append(r[n].name,r[n].value);if(t.extraData){var i=u(t.extraData);for(n=0;n<i.length;n++)i[n]&&a.append(i[n][0],i[n][1])}t.data=null;var o=e.extend(!0,{},e.ajaxSettings,t,{contentType:!1,processData:!1,cache:!1,type:l||"POST"});t.uploadProgress&&(o.xhr=function(){var r=e.ajaxSettings.xhr();return r.upload&&r.upload.addEventListener("progress",function(e){var r=0,a=e.loaded||e.position,n=e.total;e.lengthComputable&&(r=Math.ceil(a/n*100)),t.uploadProgress(e,a,n,r)},!1),r}),o.data=null;var s=o.beforeSend;return o.beforeSend=function(e,r){t.formData?r.data=t.formData:r.data=a,s&&s.call(this,e,r)},e.ajax(o)}(x):e.ajax(t),p.removeData("jqxhr").data("jqxhr",F);for(var M=0;M<g.length;M++)g[M]=null;return this.trigger("form-submit-notify",[this,t]),this},e.fn.ajaxForm=function(n,i,o,s){if(("string"==typeof n||!1===n&&arguments.length>0)&&(n={url:n,data:i,dataType:o},"function"==typeof s&&(n.success=s)),n=n||{},n.delegation=n.delegation&&e.isFunction(e.fn.on),!n.delegation&&0===this.length){var u={s:this.selector,c:this.context};return!e.isReady&&u.s?(a("DOM not ready, queuing ajaxForm"),e(function(){e(u.s,u.c).ajaxForm(n)}),this):(a("terminating; zero elements found by selector"+(e.isReady?"":" (DOM not ready)")),this)}return n.delegation?(e(document).off("submit.form-plugin",this.selector,t).off("click.form-plugin",this.selector,r).on("submit.form-plugin",this.selector,n,t).on("click.form-plugin",this.selector,n,r),this):this.ajaxFormUnbind().on("submit.form-plugin",n,t).on("click.form-plugin",n,r)},e.fn.ajaxFormUnbind=function(){return this.off("submit.form-plugin click.form-plugin")},e.fn.formToArray=function(t,r,a){var n=[];if(0===this.length)return n;var o,s=this[0],u=this.attr("id"),c=t||void 0===s.elements?s.getElementsByTagName("*"):s.elements;if(c&&(c=e.makeArray(c)),u&&(t||/(Edge|Trident)\//.test(navigator.userAgent))&&(o=e(':input[form="'+u+'"]').get()).length&&(c=(c||[]).concat(o)),!c||!c.length)return n;e.isFunction(a)&&(c=e.map(c,a));var l,f,d,p,m,h,v;for(l=0,h=c.length;l<h;l++)if(m=c[l],(d=m.name)&&!m.disabled)if(t&&s.clk&&"image"===m.type)s.clk===m&&(n.push({name:d,value:e(m).val(),type:m.type}),n.push({name:d+".x",value:s.clk_x},{name:d+".y",value:s.clk_y}));else if((p=e.fieldValue(m,!0))&&p.constructor===Array)for(r&&r.push(m),f=0,v=p.length;f<v;f++)n.push({name:d,value:p[f]});else if(i.fileapi&&"file"===m.type){r&&r.push(m);var g=m.files;if(g.length)for(f=0;f<g.length;f++)n.push({name:d,value:g[f],type:m.type});else n.push({name:d,value:"",type:m.type})}else null!==p&&void 0!==p&&(r&&r.push(m),n.push({name:d,value:p,type:m.type,required:m.required}));if(!t&&s.clk){var x=e(s.clk),y=x[0];(d=y.name)&&!y.disabled&&"image"===y.type&&(n.push({name:d,value:x.val()}),n.push({name:d+".x",value:s.clk_x},{name:d+".y",value:s.clk_y}))}return n},e.fn.formSerialize=function(t){return e.param(this.formToArray(t))},e.fn.fieldSerialize=function(t){var r=[];return this.each(function(){var a=this.name;if(a){var n=e.fieldValue(this,t);if(n&&n.constructor===Array)for(var i=0,o=n.length;i<o;i++)r.push({name:a,value:n[i]});else null!==n&&void 0!==n&&r.push({name:this.name,value:n})}}),e.param(r)},e.fn.fieldValue=function(t){for(var r=[],a=0,n=this.length;a<n;a++){var i=this[a],o=e.fieldValue(i,t);null===o||void 0===o||o.constructor===Array&&!o.length||(o.constructor===Array?e.merge(r,o):r.push(o))}return r},e.fieldValue=function(t,r){var a=t.name,i=t.type,o=t.tagName.toLowerCase();if(void 0===r&&(r=!0),r&&(!a||t.disabled||"reset"===i||"button"===i||("checkbox"===i||"radio"===i)&&!t.checked||("submit"===i||"image"===i)&&t.form&&t.form.clk!==t||"select"===o&&-1===t.selectedIndex))return null;if("select"===o){var s=t.selectedIndex;if(s<0)return null;for(var u=[],c=t.options,l="select-one"===i,f=l?s+1:c.length,d=l?s:0;d<f;d++){var p=c[d];if(p.selected&&!p.disabled){var m=p.value;if(m||(m=p.attributes&&p.attributes.value&&!p.attributes.value.specified?p.text:p.value),l)return m;u.push(m)}}return u}return e(t).val().replace(n,"\r\n")},e.fn.clearForm=function(t){return this.each(function(){e("input,select,textarea",this).clearFields(t)})},e.fn.clearFields=e.fn.clearInputs=function(t){var r=/^(?:color|date|datetime|email|month|number|password|range|search|tel|text|time|url|week)$/i;return this.each(function(){var a=this.type,n=this.tagName.toLowerCase();r.test(a)||"textarea"===n?this.value="":"checkbox"===a||"radio"===a?this.checked=!1:"select"===n?this.selectedIndex=-1:"file"===a?/MSIE/.test(navigator.userAgent)?e(this).replaceWith(e(this).clone(!0)):e(this).val(""):t&&(!0===t&&/hidden/.test(a)||"string"==typeof t&&e(this).is(t))&&(this.value="")})},e.fn.resetForm=function(){return this.each(function(){var t=e(this),r=this.tagName.toLowerCase();switch(r){case"input":this.checked=this.defaultChecked;case"textarea":return this.value=this.defaultValue,!0;case"option":case"optgroup":var a=t.parents("select");return a.length&&a[0].multiple?"option"===r?this.selected=this.defaultSelected:t.find("option").resetForm():a.resetForm(),!0;case"select":return t.find("option").each(function(e){if(this.selected=this.defaultSelected,this.defaultSelected&&!t[0].multiple)return t[0].selectedIndex=e,!1}),!0;case"label":var n=e(t.attr("for")),i=t.find("input,select,textarea");return n[0]&&i.unshift(n[0]),i.resetForm(),!0;case"form":return("function"==typeof this.reset||"object"==typeof this.reset&&!this.reset.nodeType)&&this.reset(),!0;default:return t.find("form,input,label,select,textarea").resetForm(),!0}})},e.fn.enable=function(e){return void 0===e&&(e=!0),this.each(function(){this.disabled=!e})},e.fn.selected=function(t){return void 0===t&&(t=!0),this.each(function(){var r=this.type;if("checkbox"===r||"radio"===r)this.checked=t;else if("option"===this.tagName.toLowerCase()){var a=e(this).parent("select");t&&a[0]&&"select-one"===a[0].type&&a.find("option").selected(!1),this.selected=t}})},e.fn.ajaxSubmit.debug=!1});
+
+;
+/**
+ * @file
+ * JavaScript behaviors for Ajax.
+ */
+
+(function ($, Drupal) {
+
+  'use strict';
+
+  Drupal.webform = Drupal.webform || {};
+  Drupal.webform.ajax = Drupal.webform.ajax || {};
+  // Allow scrollTopOffset to be custom defined or based on whether there is a
+  // floating toolbar.
+  Drupal.webform.ajax.scrollTopOffset = Drupal.webform.ajax.scrollTopOffset || ($('#toolbar-administration').length ? 140 : 10);
+
+  /**
+   * Provide Webform Ajax link behavior.
+   *
+   * Display fullscreen progress indicator instead of throbber.
+   * Copied from: Drupal.behaviors.AJAX
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the behavior to a.webform-ajax-link.
+   */
+  Drupal.behaviors.webformAjaxLink = {
+    attach: function (context) {
+      $('.webform-ajax-link').once('webform-ajax-link').each(function () {
+        var element_settings = {};
+        element_settings.progress = {type: 'fullscreen'};
+
+        // For anchor tags, these will go to the target of the anchor rather
+        // than the usual location.
+        var href = $(this).attr('href');
+        if (href) {
+          element_settings.url = href;
+          element_settings.event = 'click';
+        }
+        element_settings.dialogType = $(this).data('dialog-type');
+        element_settings.dialogRenderer = $(this).data('dialog-renderer');
+        element_settings.dialog = $(this).data('dialog-options');
+        element_settings.base = $(this).attr('id');
+        element_settings.element = this;
+        Drupal.ajax(element_settings);
+
+        // For anchor tags with 'data-hash' attribute, add the hash to current
+        // pages location.
+        // @see \Drupal\webform_ui\WebformUiEntityElementsForm::getElementRow
+        // @see Drupal.behaviors.webformFormTabs
+        var hash = $(this).data('hash');
+        if (hash) {
+          $(this).on('click', function () {
+            location.hash = $(this).data('hash');
+          });
+        }
+
+        // Close all open modal dialogs when opening off-canvas dialog.
+        if (element_settings.dialogRenderer === 'off_canvas') {
+          $(this).on('click', function () {
+            $(".ui-dialog.webform-ui-dialog:visible").find('.ui-dialog-content').dialog('close');
+          });
+        }
+      });
+    }
+  };
+
+  /**
+   * Provide Ajax callback for confirmation back to link.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the behavior to confirmation back to link.
+   */
+  Drupal.behaviors.webformConfirmationBackAjax = {
+    attach: function (context) {
+      $('.js-webform-confirmation-back-link-ajax', context)
+        .once('webform-confirmation-back-ajax')
+        .click(function (event) {
+          var $form = $(this).parents('form');
+
+          // Trigger the Ajax call back for the hidden submit button.
+          // @see \Drupal\webform\WebformSubmissionForm::getCustomForm
+          $form.find('.js-webform-confirmation-back-submit-ajax').click();
+
+          // Move the progress indicator from the submit button to after this link.
+          // @todo Figure out a better way to set a progress indicator.
+          var $progress_indicator = $form.find('.ajax-progress');
+          if ($progress_indicator) {
+            $(this).after($progress_indicator);
+          }
+
+          // Cancel the click event.
+          event.preventDefault();
+          event.stopPropagation();
+        });
+    }
+  };
+
+  /****************************************************************************/
+  // Ajax commands.
+  /****************************************************************************/
+
+  /**
+   * Track the updated table row key.
+   */
+  var updateKey;
+
+  /**
+   * Track the add element key.
+   */
+  var addElement;
+
+  /**
+   * Command to insert new content into the DOM.
+   *
+   * @param {Drupal.Ajax} ajax
+   *   {@link Drupal.Ajax} object created by {@link Drupal.ajax}.
+   * @param {object} response
+   *   The response from the Ajax request.
+   * @param {string} response.data
+   *   The data to use with the jQuery method.
+   * @param {string} [response.method]
+   *   The jQuery DOM manipulation method to be used.
+   * @param {string} [response.selector]
+   *   A optional jQuery selector string.
+   * @param {object} [response.settings]
+   *   An optional array of settings that will be used.
+   * @param {number} [status]
+   *   The XMLHttpRequest status.
+   */
+  Drupal.AjaxCommands.prototype.webformInsert = function (ajax, response, status) {
+    // Insert the HTML.
+    this.insert(ajax, response, status);
+
+    // Add element.
+    if (addElement) {
+      var addSelector = (addElement === '_root_')
+        ? '#webform-ui-add-element'
+        : '[data-drupal-selector="edit-webform-ui-elements-' + addElement  + '-add"]';
+      $(addSelector).click();
+    }
+
+    // If not add element, then scroll to and highlight the updated table row.
+    if (!addElement && updateKey) {
+      var $element = $('tr[data-webform-key="' + updateKey + '"]');
+
+      // Highlight the updated element's row.
+      $element.addClass('color-success');
+      setTimeout(function () {$element.removeClass('color-success')}, 3000);
+
+      // Focus first tabbable item for the updated elements and handlers.
+      $element.find(':tabbable:not(.tabledrag-handle)').eq(0).focus();
+
+      // Scroll to elements that are not visible.
+      if (!isScrolledIntoView($element)) {
+        $('html, body').animate({scrollTop: $element.offset().top - Drupal.webform.ajax.scrollTopOffset}, 500);
+      }
+    }
+    else {
+      // Focus main content.
+      $('#main-content').focus();
+    }
+
+    // Display main page's status message in a floating container.
+    var $wrapper = $(response.selector);
+    if ($wrapper.parents('.ui-dialog').length === 0) {
+      var $messages = $wrapper.find('.messages');
+      // If 'add element' don't show any messages.
+      if (addElement) {
+        $messages.remove();
+      }
+      else if ($messages.length) {
+        var $floatingMessage = $('#webform-ajax-messages');
+        if ($floatingMessage.length === 0) {
+          $floatingMessage = $('<div id="webform-ajax-messages" class="webform-ajax-messages"></div>');
+          $('body').append($floatingMessage);
+        }
+        if ($floatingMessage.is(":animated")) {
+          $floatingMessage.stop(true, true);
+        }
+        $floatingMessage.html($messages).show().delay(3000).fadeOut(1000);
+      }
+    }
+
+    updateKey = null; // Reset element update.
+    addElement = null; // Reset add element.
+  };
+
+  /**
+   * Scroll to top ajax command.
+   *
+   * @param {Drupal.Ajax} [ajax]
+   *   A {@link Drupal.ajax} object.
+   * @param {object} response
+   *   Ajax response.
+   * @param {string} response.selector
+   *   Selector to use.
+   *
+   * @see Drupal.AjaxCommands.prototype.viewScrollTop
+   */
+  Drupal.AjaxCommands.prototype.webformScrollTop = function (ajax, response) {
+    // Scroll to the top of the view. This will allow users
+    // to browse newly loaded content after e.g. clicking a pager
+    // link.
+    var offset = $(response.selector).offset();
+    // We can't guarantee that the scrollable object should be
+    // the body, as the view could be embedded in something
+    // more complex such as a modal popup. Recurse up the DOM
+    // and scroll the first element that has a non-zero top.
+    var scrollTarget = response.selector;
+    while ($(scrollTarget).scrollTop() === 0 && $(scrollTarget).parent()) {
+      scrollTarget = $(scrollTarget).parent();
+    }
+
+    if (response.target == 'page' && $(scrollTarget).length && $(scrollTarget)[0].tagName === 'HTML') {
+      // Scroll to top when scroll target is the entire page.
+      // @see https://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
+      var rect = $(scrollTarget)[0].getBoundingClientRect();
+      if (!(rect.top >= 0 && rect.left >= 0 && rect.bottom <= $(window).height() && rect.right <= $(window).width())) {
+        $(scrollTarget).animate({scrollTop: 0}, 500);
+      }
+    }
+    else {
+      // Only scroll upward.
+      if (offset.top - Drupal.webform.ajax.scrollTopOffset < $(scrollTarget).scrollTop()) {
+        $(scrollTarget).animate({scrollTop: (offset.top - Drupal.webform.ajax.scrollTopOffset)}, 500);
+      }
+    }
+
+    // Focus on the form wrapper content bookmark if
+    // .js-webform-autofocus is not enabled.
+    // @see \Drupal\webform\Form\WebformAjaxFormTrait::buildAjaxForm
+    var $form = $(response.selector + '-content').find('form');
+    if (!$form.hasClass('js-webform-autofocus')) {
+      $(response.selector + '-content').focus();
+    }
+  };
+
+  /**
+   * Command to refresh the current webform page.
+   *
+   * @param {Drupal.Ajax} [ajax]
+   *   {@link Drupal.Ajax} object created by {@link Drupal.ajax}.
+   * @param {object} response
+   *   The response from the Ajax request.
+   * @param {string} response.url
+   *   The URL to redirect to.
+   * @param {number} [status]
+   *   The XMLHttpRequest status.
+   */
+  Drupal.AjaxCommands.prototype.webformRefresh = function (ajax, response, status) {
+    // Get URL path name.
+    // @see https://stackoverflow.com/questions/6944744/javascript-get-portion-of-url-path
+    var a = document.createElement('a');
+    a.href = response.url;
+    if (a.pathname == window.location.pathname && $('.webform-ajax-refresh').length) {
+      updateKey = (response.url.match(/[\?|&]update=([^&]+)($|&)/)) ? RegExp.$1 : null;
+      addElement = (response.url.match(/[\?|&]add_element=([^&]+)($|&)/)) ? RegExp.$1 : null;
+      $('.webform-ajax-refresh').click();
+    }
+    else {
+      this.redirect(ajax, response, status);
+    }
+  };
+
+  /**
+   * Command to close a dialog.
+   *
+   * If no selector is given, it defaults to trying to close the modal.
+   *
+   * @param {Drupal.Ajax} [ajax]
+   * @param {object} response
+   * @param {string} response.selector
+   * @param {bool} response.persist
+   * @param {number} [status]
+   */
+  Drupal.AjaxCommands.prototype.webformCloseDialog = function (ajax, response, status) {
+    if ($('#drupal-off-canvas').length) {
+      // Close off-canvas system tray which is not triggered by close dialog
+      // command.
+      // @see Drupal.behaviors.offCanvasEvents
+      $('#drupal-off-canvas').remove();
+      $('body').removeClass('js-tray-open');
+      // Remove all *.off-canvas events
+      $(document).off('.off-canvas');
+      $(window).off('.off-canvas');
+      var edge = document.documentElement.dir === 'rtl' ? 'left' : 'right';
+      var $mainCanvasWrapper = $('[data-off-canvas-main-canvas]');
+      $mainCanvasWrapper.css('padding-' + edge, 0);
+    }
+    else {
+      // https://stackoverflow.com/questions/15763909/jquery-ui-dialog-check-if-exists-by-instance-method
+      if ($(response.selector).hasClass('ui-dialog-content')) {
+        this.closeDialog(ajax, response, status);
+      }
+    }
+  };
+
+  /**
+   * Triggers audio UAs to read the supplied text.
+   *
+   * @param {Drupal.Ajax} [ajax]
+   *   A {@link Drupal.ajax} object.
+   * @param {object} response
+   *   Ajax response.
+   * @param {string} response.text
+   *   A string to be read by the UA.
+   * @param {string} [response.priority='polite']
+   *   A string to indicate the priority of the message. Can be either
+   *   'polite' or 'assertive'.
+   *
+   * @see Drupal.announce
+   */
+  Drupal.AjaxCommands.prototype.webformAnnounce = function (ajax, response) {
+    // Delay the announcement.
+    setTimeout(function () {Drupal.announce(response.text, response.priority);}, 200);
+  };
+
+  /****************************************************************************/
+  // Helper functions.
+  /****************************************************************************/
+
+  /**
+   * Determine if element is visible in the viewport.
+   *
+   * @param element
+   *   An element.
+   *
+   * @returns {boolean}
+   *   TRUE if element is visible in the viewport.
+   *
+   * @see https://stackoverflow.com/questions/487073/check-if-element-is-visible-after-scrolling
+   */
+  function isScrolledIntoView(element) {
+    var docViewTop = $(window).scrollTop();
+    var docViewBottom = docViewTop + $(window).height();
+
+    var elemTop = $(element).offset().top;
+    var elemBottom = elemTop + $(element).height();
+
+    return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+  }
+
+})(jQuery, Drupal);
+;

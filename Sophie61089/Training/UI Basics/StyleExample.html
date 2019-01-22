@@ -1,0 +1,27 @@
+<html>
+
+    <head>
+        <title>StyleSheets</title>
+        <link rel="stylesheet" type="text/css" href="css/Style.css"> <!--Linked style sheet-->
+
+        <!--Embedded stylesheet - for all tags in current document **takes priority over linked stylesheet**-->
+        <style>
+            span{
+                color:darkcyan
+            }
+        </style>
+    </head>
+
+    <body>
+        <div style="background-color: blueviolet">This is a division for the Header</div>
+        <div>
+            This is a division of the body
+            <!--Inline Styles - only apllies to this element **HIGHEST PRIORITY**-->
+            <span style="background-color: darkkhaki;color: aqua">Content in span area 1</span>
+            <span>Content in span area 2</span>
+            <span>Content in span area 3</span>
+        </div>
+        <div>This is a division for the footer</div>
+    </body>
+
+</html>
