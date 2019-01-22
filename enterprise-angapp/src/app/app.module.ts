@@ -6,7 +6,11 @@ import { AppComponent } from './app.component';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Comp61086Component } from './comp61086/comp61086.component';
+=======
+import { Comp61078Component } from './comp61078/comp61078.component';
+>>>>>>> 8713d6181353bf134edddb8be660f747981d369e
 =======
 <<<<<<< HEAD
 =======
@@ -31,7 +35,11 @@ import { Comp61081Component } from './comp61081/comp61081.component';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     Comp61086Component
+=======
+    Comp61078Component
+>>>>>>> 8713d6181353bf134edddb8be660f747981d369e
 =======
 <<<<<<< HEAD
 =======
