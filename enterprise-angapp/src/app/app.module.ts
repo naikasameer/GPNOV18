@@ -26,10 +26,6 @@ import { Comp61078Component } from './comp61078/comp61078.component';
     Comp61086Component,
     Comp61078Component,
     Comp61073Component,
- 
-  
-
-
   ],
   imports: [
     BrowserModule,
