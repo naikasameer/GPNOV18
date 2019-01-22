@@ -25,10 +25,8 @@ import { Comp61078Component } from './comp61078/comp61078.component';
     Comp61084Component,
     Comp61086Component,
     Comp61078Component,
-    Comp61081Component,
-
     Comp61073Component,
-    Comp61081Component,
+ 
   
 
 
