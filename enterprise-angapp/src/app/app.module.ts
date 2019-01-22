@@ -10,11 +10,6 @@ import { Comp61081Component } from './comp61081/comp61081.component';
 import { Comp61073Component } from './comp61073/comp61073.component';
 import { Comp61086Component } from './comp61086/comp61086.component';
 import { Comp61078Component } from './comp61078/comp61078.component';
-import { Comp61081Component } from './comp61081/comp61081.component';
-import { Comp61084Component } from './comp61084/comp61084.component';
-import { Comp61073Component } from './comp61073/comp61073.component';
-import { Comp61081Component } from './comp61081/comp61081.component';
-
 
 
 @NgModule({
